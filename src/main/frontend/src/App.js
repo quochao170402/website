@@ -7,8 +7,9 @@ import axios from 'axios';
 const DemoCode = () => {
 
   const fecthData = () => {
-    axios.get("http://localhost:8080").then(res => {
+    axios.get("https://website-h3.herokuapp.com/").then(res => {
       console.log(res);
+      console.log("Hello world");
     });
   }
 
