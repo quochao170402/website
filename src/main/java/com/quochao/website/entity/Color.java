@@ -9,11 +9,11 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "category")
-public class Category implements Serializable {
+@Table(name = "color")
+public class Color implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Category implements Serializable {
     @Column(nullable = false)
     private Boolean state = true;
 
-    @Column(name = "created_at",nullable = false)
+    @Column(name = "created_at", nullable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "updated_at")
@@ -37,6 +37,6 @@ public class Category implements Serializable {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    @OneToMany(mappedBy = "color")
+    private List<ProductColor> productColors;
 }

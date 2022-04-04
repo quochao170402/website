@@ -9,11 +9,11 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "category")
-public class Category implements Serializable {
+@Table(name = "size")
+public class Size implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +24,6 @@ public class Category implements Serializable {
     @Column(nullable = false)
     private String code;
 
-    // State in [active,inactive]
     @Column(nullable = false)
     private Boolean state = true;
 
@@ -37,6 +36,6 @@ public class Category implements Serializable {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    @OneToMany(mappedBy = "size")
+    private List<ProductSize> productSizes;
 }

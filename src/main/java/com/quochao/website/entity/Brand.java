@@ -6,14 +6,16 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "category")
-public class Category implements Serializable {
+@Table(name = "brand")
+public class Brand implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +26,16 @@ public class Category implements Serializable {
     @Column(nullable = false)
     private String code;
 
+    // If the brand doesn't have a logo, it will set a default image
+    private String logo = "no-image";
+
     // State in [active,inactive]
-    @Column(nullable = false)
+    // Default value of the state field is true,
+    // meaning a brand after being created will be active until it is deactivated
     private Boolean state = true;
 
-    @Column(name = "created_at",nullable = false)
+    //    Default value of created at is now
+    @Column(name = "created_at")
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "updated_at")
@@ -37,6 +44,6 @@ public class Category implements Serializable {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "brand")
     private List<Product> products;
 }
