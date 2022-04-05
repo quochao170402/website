@@ -15,15 +15,9 @@ import java.util.Random;
 @CrossOrigin("*")
 @Data
 public class HomeController {
-    private final BrandRepository brandRepository;
 
     @GetMapping
-    public String home(){
-        Brand brand = new Brand();
-        Random random = new Random();
-        brand.setName("name"+random.nextInt(100000));
-        brand.setCode("code"+random.nextInt(100000));
-        brand.setLogo("logo"+random.nextDouble());
-        return "Home Page " + brandRepository.save(brand);
+    public String home() {
+        return "Home Page ";
     }
 }
