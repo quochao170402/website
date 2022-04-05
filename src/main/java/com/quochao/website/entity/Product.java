@@ -1,9 +1,8 @@
 package com.quochao.website.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Getter
 @Setter
 @Entity
@@ -35,7 +35,7 @@ public class Product implements Serializable {
     private Double competitive;
 
     @Column(nullable = false)
-    private String image = "no-image";
+    private String image;
 
     // Short description is a title of product, show it in product detail page or product card
     @Column(name = "short_description")
@@ -43,18 +43,12 @@ public class Product implements Serializable {
 
     private String description;
 
-    @Column(name = "bestseller", nullable = false)
-    private Boolean bestSeller = false;
-
-    @Column(nullable = false)
-    private Boolean latest = false;
-
     //    State in [active,inactive]
     @Column(nullable = false)
-    private Boolean state = true;
+    private Boolean state;
 
     @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
@@ -70,21 +64,27 @@ public class Product implements Serializable {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<Image> images;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<ProductColor> productColors;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<ProductSize> productSizes;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductTag> productTags;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> orderDetails;
+
+    @JsonIgnore
+    @Transient
+    private MultipartFile file;
 }

@@ -29,11 +29,11 @@ public class Review implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "content", nullable = false)
-    private String content;
-
     @Column(name = "rate")
     private Double rate;
+
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());

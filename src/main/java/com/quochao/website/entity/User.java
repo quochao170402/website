@@ -17,9 +17,6 @@ public class User implements Serializable {
     private String name;
 
     @Column(nullable = false)
-    private Date dob;
-
-    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -27,6 +24,8 @@ public class User implements Serializable {
 
     @Column(name = "phone_number", nullable = false)
     private String phone;
+
+    private String image = "no-image";
 
     @Column(nullable = true)
     private Boolean state = true;

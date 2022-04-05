@@ -23,10 +23,4 @@ public class Image implements Serializable {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
 }
