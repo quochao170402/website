@@ -80,7 +80,7 @@ public class ProductController {
                 .body(productService.searchByKeyword(keyword));
     }
 
-//    start crud products + getAll()
+    //    start crud products + getAll()
     //    Add new product, validate product information before model attribute arrive server
     @PostMapping
     public ResponseEntity<?> addProduct(@ModelAttribute CreateProductDto createProductDto) {
@@ -101,9 +101,10 @@ public class ProductController {
                 .body(productService.deleteProduct(id));
     }
 
-    @PostMapping(path = "/demo/{s}")
-    public String demoPost(@PathVariable String s){
-        return s;
+    @PostMapping(path = "/demo")
+    public ProductDto demoPost(@ModelAttribute ProductDto productDto) {
+        System.out.println(productDto);
+        return productDto;
     }
 
 //    end crud products
