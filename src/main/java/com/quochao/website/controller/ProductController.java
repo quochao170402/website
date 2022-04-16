@@ -101,6 +101,11 @@ public class ProductController {
                 .body(productService.deleteProduct(id));
     }
 
+    @PostMapping(path = "/demo")
+    public String demoPost(){
+        return "String heloloajhgaskljgalksjgahg";
+    }
+
 //    end crud products
 
     @GetMapping(path = "/filter/{brandCode}")
