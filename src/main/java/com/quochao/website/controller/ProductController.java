@@ -82,8 +82,8 @@ public class ProductController {
 
 //    start crud products + getAll()
     //    Add new product, validate product information before model attribute arrive server
-    @PostMapping(path = "/add")
-    public ResponseEntity<?> addProduct(@ModelAttribute CreateProductDto createProductDto) {
+    @PostMapping
+    public ResponseEntity<?> addProduct(@RequestBody CreateProductDto createProductDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProduct(createProductDto));
     }
