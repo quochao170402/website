@@ -84,6 +84,7 @@ public class ProductController {
     //    Add new product, validate product information before model attribute arrive server
     @PostMapping
     public ResponseEntity<?> addProduct(@ModelAttribute CreateProductDto createProductDto) {
+        System.out.println(createProductDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProduct(createProductDto));
     }
