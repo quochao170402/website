@@ -6,6 +6,7 @@ import com.quochao.website.entity.Product;
 import com.quochao.website.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,9 +81,9 @@ public class ProductController {
                 .body(productService.searchByKeyword(keyword));
     }
 
-//    start crud products + getAll()
+    //    start crud products + getAll()
     //    Add new product, validate product information before model attribute arrive server
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addProduct(@RequestBody CreateProductDto createProductDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProduct(createProductDto));
@@ -102,7 +103,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/demo/{s}")
-    public String demoPost(@PathVariable String s){
+    public String demoPost(@PathVariable String s) {
         return s;
     }
 
