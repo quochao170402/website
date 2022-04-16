@@ -101,9 +101,9 @@ public class ProductController {
                 .body(productService.deleteProduct(id));
     }
 
-    @PostMapping(path = "/demo")
-    public String demoPost(){
-        return "String heloloajhgaskljgalksjgahg";
+    @PostMapping(path = "/demo/{s}")
+    public String demoPost(@PathVariable String s){
+        return s;
     }
 
 //    end crud products
