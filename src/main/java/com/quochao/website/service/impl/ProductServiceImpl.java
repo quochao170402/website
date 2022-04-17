@@ -40,6 +40,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDto findByCode(String code) {
+        return ProductMapper.getINSTANCE().convertToDto(productRepository.findProductByCode(code));
+    }
+
+    @Override
     public Page<ProductDto> findAll(Integer page, Integer size, String field, String dir) {
         Page<Product> pageEntity = dir.equals("desc") ?
                 productRepository.findAll(PageRequest.of(page, size, Sort.by(field).descending())) :
@@ -49,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> searchByKeyword(String keyword) {
-        return productRepository.searchProductByKeyword(keyword).stream()
+        return productRepository.searchProductByKeyword(keyword.trim().toLowerCase().replaceAll(" ", "-")).stream()
                 .map(ProductMapper.getINSTANCE()::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -149,11 +154,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Boolean deleteProduct(Long id) {
+    public ProductDto deleteProduct(Long id) {
         Product product = productRepository.getById(id);
         product.setState(false);
         product.setDeletedAt(new Timestamp(System.currentTimeMillis()));
-        return true;
+        return ProductMapper.getINSTANCE().convertToDto(product);
     }
 
     @Override
@@ -175,9 +180,8 @@ public class ProductServiceImpl implements ProductService {
             String filename = fileStorage.saveFile(file, updated.getCode());
             updated.setImage(filename);
         }
-        updated.setProductSizes(productSizeService.addAll(updated, createProductDto.getSizes()));
-        updated.setProductColors(productColorService.addAll(updated, createProductDto.getColors()));
-
+        updated.setProductColors(productColorService.updateAll(updated, createProductDto.getColors()));
+        updated.setProductSizes(productSizeService.updateAll(updated, createProductDto.getSizes()));
         return ProductMapper.getINSTANCE().convertToDto(updated);
     }
 

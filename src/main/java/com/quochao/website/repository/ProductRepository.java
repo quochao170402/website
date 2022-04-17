@@ -1,5 +1,6 @@
 package com.quochao.website.repository;
 
+import com.quochao.website.dto.ProductDto;
 import com.quochao.website.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,8 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product as p WHERE p.name like %?1%")
+    @Query("SELECT p FROM Product p " +
+            "WHERE concat(p.code,p.brand.code,p.category.code) like %?1%")
     List<Product> searchProductByKeyword(String keyword);
 
     Page<Product> findAllByCategoryCode(String categoryCode, Pageable pageable);
@@ -29,4 +31,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsAllByCategoryCode(String categoryCode);
 
     Product getByName(String name);
+
+    Product findProductByCode(String code);
 }

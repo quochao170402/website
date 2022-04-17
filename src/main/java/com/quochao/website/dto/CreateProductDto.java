@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class CreateProductDto implements Serializable {
@@ -19,6 +20,6 @@ public class CreateProductDto implements Serializable {
     private Brand brand;
     private Category category;
     private MultipartFile file;
-    private List<Color> colors;
-    private List<Size> sizes;
+    private Set<Color> colors;
+    private Set<Size> sizes;
 }

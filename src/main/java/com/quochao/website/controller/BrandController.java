@@ -7,7 +7,6 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/brands")
@@ -22,9 +21,21 @@ public class BrandController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody Brand brand){
+    public ResponseEntity<?> add(@ModelAttribute Brand brand){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(brandService.save(brand,null));
+                .body(brandService.save(brand));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@ModelAttribute Brand brand){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(brandService.update(brand));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(brandService.delete(id));
     }
 
 }

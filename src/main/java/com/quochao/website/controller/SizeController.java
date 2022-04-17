@@ -30,4 +30,10 @@ public class SizeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(size));
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(service.delete(id));
+    }
 }

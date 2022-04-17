@@ -10,4 +10,6 @@ public interface SizeService {
     Size save(Size size);
 
     Size update(Size size);
+
+    Size delete(Long id);
 }

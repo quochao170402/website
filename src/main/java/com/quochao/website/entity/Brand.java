@@ -2,6 +2,7 @@ package com.quochao.website.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,6 +48,10 @@ public class Brand implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "brand")
     private List<Product> products;
+
+    @Transient
+    @JsonIgnore
+    private MultipartFile file;
 
     @Override
     public String toString() {

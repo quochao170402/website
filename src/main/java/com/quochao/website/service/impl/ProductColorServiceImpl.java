@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Data
@@ -25,8 +26,8 @@ public class ProductColorServiceImpl implements ProductColorService {
     }
 
     @Override
-    public List<ProductColor> addAll(Product product, List<Color> colors) {
-        if (colors==null) return null;
+    public List<ProductColor> addAll(Product product, Set<Color> colors) {
+        if (colors == null) return null;
         List<ProductColor> productColors = new ArrayList<>();
         colors.forEach(color -> {
             ProductColor productColor = new ProductColor();
@@ -35,5 +36,12 @@ public class ProductColorServiceImpl implements ProductColorService {
             productColors.add(productColor);
         });
         return repository.saveAll(productColors);
+    }
+
+    @Override
+    public List<ProductColor> updateAll(Product product, Set<Color> colors) {
+        if (colors == null) return null;
+        repository.deleteByProduct(product);
+        return addAll(product, colors);
     }
 }

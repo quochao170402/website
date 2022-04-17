@@ -1,7 +1,6 @@
 package com.quochao.website.service;
 
 import com.quochao.website.entity.Brand;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,5 +11,9 @@ public interface BrandService {
 
     List<Brand> findAll();
 
-    Brand save(Brand brand, MultipartFile file);
+    Brand save(Brand brand);
+
+    Brand update(Brand brand);
+
+    Brand delete(Long id);
 }

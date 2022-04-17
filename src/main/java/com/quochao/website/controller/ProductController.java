@@ -32,6 +32,13 @@ public class ProductController {
                 .body(productService.findAll(page, size, field, dir));
     }
 
+//    Return product detail. using method in product detail page
+    @GetMapping("{code}")
+    public ResponseEntity<?> getProduct(@PathVariable String code) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.findByCode(code));
+    }
+
     //    Find all products by category code. Return products or throw not found exception
     @GetMapping(path = "/categories/{code}")
     public ResponseEntity<?> getAllProductByCategory(
@@ -101,12 +108,6 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productService.deleteProduct(id));
-    }
-
-    @PostMapping(path = "/demo")
-    public ProductDto demoPost(@ModelAttribute ProductDto productDto) {
-        System.out.println(productDto);
-        return productDto;
     }
 
 //    end crud products

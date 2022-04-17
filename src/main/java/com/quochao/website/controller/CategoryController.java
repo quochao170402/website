@@ -2,7 +2,6 @@ package com.quochao.website.controller;
 
 import com.quochao.website.entity.Category;
 import com.quochao.website.service.CategoryService;
-import com.quochao.website.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +21,21 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCategory(@RequestBody Category category) {
+    public ResponseEntity<?> add(@ModelAttribute Category category) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryService.save(category));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@ModelAttribute Category category) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.update(category));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.delete(id));
     }
 
 

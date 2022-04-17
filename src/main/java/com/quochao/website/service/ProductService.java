@@ -10,6 +10,8 @@ import java.util.Map;
 public interface ProductService {
     List<ProductDto> findAll();
 
+    ProductDto findByCode(String code);
+
     Page<ProductDto> findAll(Integer page, Integer size, String s, String field);
 
     List<ProductDto> searchByKeyword(String keyword);
@@ -24,9 +26,10 @@ public interface ProductService {
 
     ProductDto updateProduct(CreateProductDto createProductDto);
 
-    Boolean deleteProduct(Long id);
+    ProductDto deleteProduct(Long id);
 
     Page<ProductDto> filter(String brandCode, String categoryCode, String productSize, String productColor, Double minPrice, Double maxPrice, Integer page, Integer size, String field, String dir);
 
     List<ProductDto> filter(String brand, Map<String, String> map);
+
 }

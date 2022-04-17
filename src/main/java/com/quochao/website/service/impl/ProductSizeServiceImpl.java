@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Data
@@ -25,8 +26,8 @@ public class ProductSizeServiceImpl implements ProductSizeService {
     }
 
     @Override
-    public List<ProductSize> addAll(Product product, List<Size> sizes) {
-        if (sizes==null) return null;
+    public List<ProductSize> addAll(Product product, Set<Size> sizes) {
+        if (sizes == null) return null;
         List<ProductSize> productSizes = new ArrayList<>();
         sizes.forEach(size -> {
             ProductSize productSize = new ProductSize();
@@ -36,4 +37,13 @@ public class ProductSizeServiceImpl implements ProductSizeService {
         });
         return repository.saveAll(productSizes);
     }
+
+    @Override
+    public List<ProductSize> updateAll(Product product, Set<Size> sizes) {
+        if (sizes == null) return null;
+        repository.deleteByProduct(product);
+        return addAll(product, sizes);
+    }
+
+
 }

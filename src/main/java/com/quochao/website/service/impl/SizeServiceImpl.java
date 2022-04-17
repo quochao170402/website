@@ -23,8 +23,8 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Size save(Size size) {
-        if (sizeRepository.getSizeByName(size.getName())!=null) throw new IllegalStateException("Size was existed");
-        size.setCode(size.getName().trim().toLowerCase().replaceAll(" ","-"));
+        if (sizeRepository.getSizeByName(size.getName()) != null) throw new IllegalStateException("Size was existed");
+        size.setCode(size.getName().trim().toLowerCase().replaceAll(" ", "-"));
         size.setState(true);
         size.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return sizeRepository.save(size);
@@ -32,11 +32,20 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Size update(Size size) {
+        if (size == null || size.getId() == null) throw new IllegalStateException("NULL");
         Size updated = sizeRepository.getById(size.getId());
         updated.setName(size.getName());
-        updated.setCode(updated.getName().trim().toLowerCase().replaceAll(" ","-"));
-        updated.setState(size.getState());
+        updated.setCode(updated.getName().trim().toLowerCase().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return updated;
+    }
+
+    @Override
+    public Size delete(Long id) {
+        if (id == null) throw new IllegalStateException("NULL");
+        Size size = sizeRepository.getById(id);
+        size.setState(false);
+        size.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        return size;
     }
 }

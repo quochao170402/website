@@ -7,13 +7,14 @@ import com.quochao.website.service.BrandService;
 import com.quochao.website.util.FileStorage;
 import lombok.Data;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 @Data
+@Transactional
 public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
     private final Cloudinary cloudinary;
@@ -34,13 +35,13 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand save(Brand brand, MultipartFile file) {
+    public Brand save(Brand brand) {
         if (brandRepository.getBrandByName(brand.getName()) != null)
             throw new IllegalStateException("Brand was existed");
         brand.setCode(brand.getName().toLowerCase().trim().replaceAll(" ", "-"));
-        if (file != null) {
+        if (brand.getFile() != null) {
             FileStorage fileStorage = new FileStorage(cloudinary, "brand");
-            brand.setLogo(fileStorage.saveFile(file, brand.getCode()));
+            brand.setLogo(fileStorage.saveFile(brand.getFile(), brand.getCode()));
         } else {
             brand.setLogo("no-image");
         }
@@ -48,5 +49,27 @@ public class BrandServiceImpl implements BrandService {
         brand.setState(true);
         brand.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return brandRepository.save(brand);
+    }
+
+    @Override
+    public Brand update(Brand brand) {
+        if (brand == null || brand.getId() == null) throw new IllegalStateException("NULL");
+        Brand updated = brandRepository.getById(brand.getId());
+        updated.setName(brand.getName());
+        updated.setCode(brand.getName().toLowerCase().trim().replaceAll(" ", "-"));
+        updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        if (brand.getFile() != null) {
+            FileStorage fileStorage = new FileStorage(cloudinary, "brand");
+            updated.setLogo(fileStorage.saveFile(brand.getFile(), updated.getCode()));
+        }
+        return updated;
+    }
+
+    @Override
+    public Brand delete(Long id) {
+        Brand brand = brandRepository.getById(id);
+        brand.setState(false);
+        brand.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        return brand;
     }
 }

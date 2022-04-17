@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Locale;
 
 @RequiredArgsConstructor
 @Service
@@ -32,5 +31,24 @@ public class CategoryServiceImpl implements CategoryService {
         category.setState(true);
         category.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category update(Category category) {
+        if (category==null||category.getId()==null) throw new IllegalStateException("NULL");
+        Category updated = categoryRepository.getById(category.getId());
+        updated.setName(category.getName());
+        updated.setCode(category.getName().trim().toLowerCase().replaceAll(" ", "-"));
+        updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        return updated;
+    }
+
+    @Override
+    public Category delete(Long id) {
+        if (id==null) throw new IllegalStateException("ID is null");
+        Category category = categoryRepository.getById(id);
+        category.setState(false);
+        category.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        return category;
     }
 }
