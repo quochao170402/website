@@ -22,7 +22,7 @@ public interface ProductService {
 
     ProductDto addProduct(CreateProductDto createProductDto);
 
-    ProductDto updateProduct(CreateProductDto product);
+    ProductDto updateProduct(CreateProductDto createProductDto);
 
     Boolean deleteProduct(Long id);
 

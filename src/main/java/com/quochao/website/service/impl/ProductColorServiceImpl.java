@@ -26,6 +26,7 @@ public class ProductColorServiceImpl implements ProductColorService {
 
     @Override
     public List<ProductColor> addAll(Product product, List<Color> colors) {
+        if (colors==null) return null;
         List<ProductColor> productColors = new ArrayList<>();
         colors.forEach(color -> {
             ProductColor productColor = new ProductColor();

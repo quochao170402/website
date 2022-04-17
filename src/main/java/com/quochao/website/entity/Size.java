@@ -1,5 +1,6 @@
 package com.quochao.website.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,10 +8,11 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "size")
 public class Size implements Serializable {
@@ -37,5 +39,7 @@ public class Size implements Serializable {
     private Timestamp deletedAt;
 
     @OneToMany(mappedBy = "size")
+    @JsonIgnore
     private List<ProductSize> productSizes;
+
 }

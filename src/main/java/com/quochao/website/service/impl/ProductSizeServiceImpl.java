@@ -26,6 +26,7 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 
     @Override
     public List<ProductSize> addAll(Product product, List<Size> sizes) {
+        if (sizes==null) return null;
         List<ProductSize> productSizes = new ArrayList<>();
         sizes.forEach(size -> {
             ProductSize productSize = new ProductSize();

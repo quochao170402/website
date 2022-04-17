@@ -11,7 +11,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
 @Entity
@@ -64,27 +63,27 @@ public class Product implements Serializable {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Image> images;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<ProductColor> productColors;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<ProductSize> productSizes;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Review> reviews;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<OrderDetail> orderDetails;
 
-    @JsonIgnore
     @Transient
+    @JsonIgnore
     private MultipartFile file;
 }

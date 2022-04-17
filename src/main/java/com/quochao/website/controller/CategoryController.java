@@ -1,5 +1,6 @@
 package com.quochao.website.controller;
 
+import com.quochao.website.entity.Category;
 import com.quochao.website.service.CategoryService;
 import com.quochao.website.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,12 @@ public class CategoryController {
     public ResponseEntity<?> getAllCategories() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryService.findAll());
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addCategory(@RequestBody Category category) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.save(category));
     }
 
 

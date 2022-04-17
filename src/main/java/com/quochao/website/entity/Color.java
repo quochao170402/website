@@ -1,5 +1,6 @@
 package com.quochao.website.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,5 +39,6 @@ public class Color implements Serializable {
     private Timestamp deletedAt;
 
     @OneToMany(mappedBy = "color")
+    @JsonIgnore
     private List<ProductColor> productColors;
 }

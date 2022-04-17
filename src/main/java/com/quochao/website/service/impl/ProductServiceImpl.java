@@ -172,7 +172,8 @@ public class ProductServiceImpl implements ProductService {
         MultipartFile file = createProductDto.getFile();
         if (file != null && !file.isEmpty()) {
             FileStorage fileStorage = new FileStorage(cloudinary, "product");
-            updated.setImage(fileStorage.saveFile(file, updated.getCode()));
+            String filename = fileStorage.saveFile(file, updated.getCode());
+            updated.setImage(filename);
         }
         updated.setProductSizes(productSizeService.addAll(updated, createProductDto.getSizes()));
         updated.setProductColors(productColorService.addAll(updated, createProductDto.getColors()));
