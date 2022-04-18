@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Data
 @RestController
 @RequestMapping("api/v1/sizes")
+@CrossOrigin("*")
 public class SizeController {
     private final SizeService service;
 
