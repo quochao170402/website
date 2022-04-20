@@ -20,7 +20,9 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Page<Size> findAll(Integer page, Integer size, String field, String dir) {
-        return sizeRepository.findAll(PageRequest.of(page, size, Sort.by(dir, field)));
+
+        return (dir.equals("asc")) ? sizeRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, field))) :
+                sizeRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, field)));
     }
 
     @Override
