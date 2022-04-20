@@ -128,11 +128,4 @@ public class ProductController {
                 .body(productService.filter(brandCode, categoryCode, productSize, productColor, minPrice, maxPrice, page, size, field, dir));
     }
 
-//    @GetMapping(path = "/filter/{brand}")
-//    public ResponseEntity<?> filter(
-//            @PathVariable String brand,
-//            @RequestParam Map<String, String> map) {
-//        List<ProductDto> list = productService.filter(brand,map);
-//    }
-
 }
