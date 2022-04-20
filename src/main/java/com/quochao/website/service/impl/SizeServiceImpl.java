@@ -4,11 +4,13 @@ import com.quochao.website.entity.Size;
 import com.quochao.website.repository.SizeRepository;
 import com.quochao.website.service.SizeService;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Service
 @Data
@@ -17,8 +19,8 @@ public class SizeServiceImpl implements SizeService {
     private final SizeRepository sizeRepository;
 
     @Override
-    public List<Size> findAll() {
-        return sizeRepository.findAll();
+    public Page<Size> findAll(Integer page, Integer size, String field, String dir) {
+        return sizeRepository.findAll(PageRequest.of(page, size, Sort.by(dir, field)));
     }
 
     @Override

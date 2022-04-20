@@ -1,11 +1,12 @@
 package com.quochao.website.service;
 
 import com.quochao.website.entity.Size;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface SizeService {
-    List<Size> findAll();
+    Page<Size> findAll(Integer page, Integer size, String field, String dir);
 
     Size save(Size size);
 

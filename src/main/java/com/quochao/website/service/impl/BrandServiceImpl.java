@@ -55,8 +55,9 @@ public class BrandServiceImpl implements BrandService {
     public Brand update(Brand brand) {
         if (brand == null || brand.getId() == null) throw new IllegalStateException("NULL");
         Brand updated = brandRepository.getById(brand.getId());
-        updated.setName(brand.getName());
-        updated.setCode(brand.getName().toLowerCase().trim().replaceAll(" ", "-"));
+        if (brand.getName() != null)
+            updated.setName(brand.getName());
+        updated.setCode(updated.getName().toLowerCase().trim().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         if (brand.getFile() != null) {
             FileStorage fileStorage = new FileStorage(cloudinary, "brand");

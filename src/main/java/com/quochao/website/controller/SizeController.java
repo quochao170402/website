@@ -15,25 +15,29 @@ public class SizeController {
     private final SizeService service;
 
     @GetMapping
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(name = "field", required = false, defaultValue = "name") String field,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(service.findAll());
+                .body(service.findAll(page, size, field, dir));
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@ModelAttribute Size size){
+    public ResponseEntity<?> add(@ModelAttribute Size size) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.save(size));
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@ModelAttribute Size size){
+    public ResponseEntity<?> update(@ModelAttribute Size size) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(size));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.delete(id));
     }
