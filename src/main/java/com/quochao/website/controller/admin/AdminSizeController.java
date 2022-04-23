@@ -1,19 +1,18 @@
-package com.quochao.website.controller;
+package com.quochao.website.controller.admin;
 
-import com.quochao.website.entity.Category;
-import com.quochao.website.service.CategoryService;
-import lombok.RequiredArgsConstructor;
+import com.quochao.website.entity.Size;
+import com.quochao.website.service.SizeService;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
+@Data
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("api/v1/admin/sizes")
 @CrossOrigin("*")
-public class CategoryController {
-    private final CategoryService categoryService;
-
+public class AdminSizeController {
+    private final SizeService sizeService;
 
     @GetMapping
     public ResponseEntity<?> getAll(
@@ -22,26 +21,31 @@ public class CategoryController {
             @RequestParam(name = "field", required = false, defaultValue = "name") String field,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryService.findAll(page, size, field, dir));
+                .body(sizeService.findAll(page, size, field, dir));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getSizeById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(sizeService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@ModelAttribute Category category) {
+    public ResponseEntity<?> addSize(@ModelAttribute Size size) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryService.save(category));
+                .body(sizeService.save(size));
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@ModelAttribute Category category) {
+    public ResponseEntity<?> updateSize(@ModelAttribute Size size) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryService.update(category));
+                .body(sizeService.update(size));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> deleteSize(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryService.delete(id));
+                .body(sizeService.delete(id));
     }
-
 
 }

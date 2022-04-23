@@ -1,6 +1,7 @@
 package com.quochao.website.service;
 
 import com.quochao.website.entity.Brand;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -9,11 +10,13 @@ public interface BrandService {
 
     Brand getBrandByName(String name);
 
-    List<Brand> findAll();
+    Page<Brand> findAll(Integer page, Integer size, String field, String dir);
 
     Brand save(Brand brand);
 
     Brand update(Brand brand);
 
     Brand delete(Long id);
+
+    Brand findById(Long id);
 }

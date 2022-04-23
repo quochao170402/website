@@ -7,6 +7,7 @@ import com.quochao.website.repository.ProductColorRepository;
 import com.quochao.website.service.ProductColorService;
 import lombok.Data;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 @Service
 @Data
+@Transactional
 public class ProductColorServiceImpl implements ProductColorService {
     private final ProductColorRepository repository;
 

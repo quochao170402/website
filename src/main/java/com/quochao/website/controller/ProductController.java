@@ -1,17 +1,11 @@
 package com.quochao.website.controller;
 
 import com.quochao.website.dto.CreateProductDto;
-import com.quochao.website.dto.ProductDto;
-import com.quochao.website.entity.Product;
 import com.quochao.website.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/v1/products")
@@ -32,7 +26,7 @@ public class ProductController {
                 .body(productService.findAll(page, size, field, dir));
     }
 
-//    Return product detail. using method in product detail page
+    //    Return product detail. using method in product detail page
     @GetMapping("{code}")
     public ResponseEntity<?> getProduct(@PathVariable String code) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -64,7 +58,7 @@ public class ProductController {
     }
 
     //    filter by color -> products {product -> product-colors -> color
-//    color -> product-color -> product
+    //    color -> product-color -> product
     @GetMapping(path = "/color/{code}")
     public ResponseEntity<?> getAllByColor(
             @PathVariable String code,
@@ -94,7 +88,7 @@ public class ProductController {
     public ResponseEntity<?> addProduct(@ModelAttribute CreateProductDto createProductDto) {
         System.out.println(createProductDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.addProduct(createProductDto));
+                .body(productService.save(createProductDto));
     }
 
     @PutMapping

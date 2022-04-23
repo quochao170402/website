@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 @Service
 @Data
@@ -21,8 +22,8 @@ public class SizeServiceImpl implements SizeService {
     @Override
     public Page<Size> findAll(Integer page, Integer size, String field, String dir) {
 
-        return (dir.equals("asc")) ? sizeRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, field))) :
-                sizeRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, field)));
+        return (dir.equals("asc")) ? sizeRepository.findAll(PageRequest.of(page, size, Sort.by(field).ascending())) :
+                sizeRepository.findAll(PageRequest.of(page, size, Sort.by(field).descending()));
     }
 
     @Override
@@ -37,7 +38,9 @@ public class SizeServiceImpl implements SizeService {
     @Override
     public Size update(Size size) {
         if (size == null || size.getId() == null) throw new IllegalStateException("NULL");
-        Size updated = sizeRepository.getById(size.getId());
+        Optional<Size> optionalSize = sizeRepository.findById(size.getId());
+        if (!optionalSize.isPresent()) throw new IllegalStateException("Not found size");
+        Size updated = optionalSize.get();
         updated.setName(size.getName());
         updated.setCode(updated.getName().trim().toLowerCase().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -47,9 +50,18 @@ public class SizeServiceImpl implements SizeService {
     @Override
     public Size delete(Long id) {
         if (id == null) throw new IllegalStateException("NULL");
-        Size size = sizeRepository.getById(id);
+        Optional<Size> optionalSize = sizeRepository.findById(id);
+        if (!optionalSize.isPresent()) throw new IllegalStateException("Not found size");
+        Size size = optionalSize.get();
         size.setState(false);
         size.setDeletedAt(new Timestamp(System.currentTimeMillis()));
         return size;
+    }
+
+    @Override
+    public Size getById(Long id) {
+        Optional<Size> optionalSize = sizeRepository.findById(id);
+        if (optionalSize.isPresent()) return optionalSize.get();
+        else throw new IllegalStateException("Not found size");
     }
 }

@@ -1,11 +1,12 @@
 package com.quochao.website.service;
 
 import com.quochao.website.entity.Category;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<Category> findAll();
+    Page<Category> findAll(Integer page, Integer size, String field, String dir);
 
     Category getCategoryByName(String name);
 
@@ -14,4 +15,6 @@ public interface CategoryService {
     Category update(Category category);
 
     Category delete(Long id);
+
+    Category getById(Long id);
 }

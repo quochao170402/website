@@ -1,5 +1,6 @@
 package com.quochao.website.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,5 +23,8 @@ public class Image implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
+
+
 }

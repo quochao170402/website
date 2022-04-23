@@ -1,4 +1,5 @@
-package com.quochao.website.controller;
+package com.quochao.website.controller.admin;
+
 
 import com.quochao.website.entity.Color;
 import com.quochao.website.service.ColorService;
@@ -7,12 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("api/v1/colors")
 @Data
+@RestController
+@RequestMapping("api/v1/admin/colors")
 @CrossOrigin("*")
-
-public class ColorController {
+public class AdminColorController {
     private final ColorService colorService;
 
     @GetMapping
@@ -25,15 +25,27 @@ public class ColorController {
                 .body(colorService.findAll(page, size, field, dir));
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<?> updateColor(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(colorService.getById(id));
+    }
+
     @PostMapping
     public ResponseEntity<?> add(@ModelAttribute Color color){
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(colorService.save(color));
     }
 
     @PutMapping
     public ResponseEntity<?> update(@ModelAttribute Color color){
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(colorService.update(color));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(colorService.delete(id));
     }
 }

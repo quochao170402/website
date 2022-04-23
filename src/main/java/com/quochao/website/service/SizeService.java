@@ -13,4 +13,6 @@ public interface SizeService {
     Size update(Size size);
 
     Size delete(Long id);
+
+    Size getById(Long id);
 }

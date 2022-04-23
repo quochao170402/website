@@ -1,5 +1,4 @@
-package com.quochao.website.controller;
-
+package com.quochao.website.controller.admin;
 
 import com.quochao.website.entity.Brand;
 import com.quochao.website.service.BrandService;
@@ -9,38 +8,43 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/brands")
+@RequestMapping("/api/v1/admin/brands")
 @Data
 @CrossOrigin("*")
-public class BrandController {
+public class AdminBrandController {
     private final BrandService brandService;
 
     @GetMapping
     public ResponseEntity<?> getAll(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(name = "field", required = false, defaultValue = "name") String field,
+            @RequestParam(name = "field", required = false, defaultValue = "id") String field,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.findAll(page, size, field, dir));
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(brandService.findById(id));
+    }
+
     @PostMapping
-    public ResponseEntity<?> add(@ModelAttribute Brand brand){
+    public ResponseEntity<?> addBrand(@ModelAttribute Brand brand) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.save(brand));
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@ModelAttribute Brand brand){
+    public ResponseEntity<?> updateBrand(@ModelAttribute Brand brand) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.update(brand));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<?> deleteBrand(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.delete(id));
     }
-
 }

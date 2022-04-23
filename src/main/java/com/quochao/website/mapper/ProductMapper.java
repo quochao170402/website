@@ -2,6 +2,7 @@ package com.quochao.website.mapper;
 
 
 import com.quochao.website.dto.CreateProductDto;
+import com.quochao.website.dto.ProductDetailDto;
 import com.quochao.website.dto.ProductDto;
 import com.quochao.website.entity.Product;
 import lombok.Data;
@@ -78,6 +79,13 @@ public class ProductMapper {
         product.setCategory(dto.getCategory());
         product.setFile(dto.getFile());
         return product;
+    }
+
+    public ProductDetailDto convertToProductDetailDto(Product product) {
+        ProductDetailDto dto = new ProductDetailDto();
+        dto.setProduct(product);
+        dto.setImages(product.getImages());
+        return dto;
     }
 
 }

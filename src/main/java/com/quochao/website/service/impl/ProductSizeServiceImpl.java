@@ -8,12 +8,14 @@ import com.quochao.website.service.ProductSizeService;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @Service
 @Data
+@Transactional
 public class ProductSizeServiceImpl implements ProductSizeService {
     private final ProductSizeRepository repository;
 

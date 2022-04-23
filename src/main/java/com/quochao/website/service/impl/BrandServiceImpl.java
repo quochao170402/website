@@ -6,11 +6,15 @@ import com.quochao.website.repository.BrandRepository;
 import com.quochao.website.service.BrandService;
 import com.quochao.website.util.FileStorage;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Data
@@ -30,8 +34,10 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Brand> findAll() {
-        return brandRepository.findAll();
+    public Page<Brand> findAll(Integer page, Integer size, String field, String dir) {
+        return (dir.equalsIgnoreCase("asc")) ?
+                brandRepository.findAll(PageRequest.of(page, size, Sort.by(field).ascending())) :
+                brandRepository.findAll(PageRequest.of(page, size, Sort.by(field).descending()));
     }
 
     @Override
@@ -54,7 +60,11 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand update(Brand brand) {
         if (brand == null || brand.getId() == null) throw new IllegalStateException("NULL");
-        Brand updated = brandRepository.getById(brand.getId());
+
+        Optional<Brand> optionalBrand = brandRepository.findById(brand.getId());
+        if (!optionalBrand.isPresent()) throw new IllegalStateException("Not found Brand");
+
+        Brand updated = optionalBrand.get();
         if (brand.getName() != null)
             updated.setName(brand.getName());
         updated.setCode(updated.getName().toLowerCase().trim().replaceAll(" ", "-"));
@@ -72,5 +82,12 @@ public class BrandServiceImpl implements BrandService {
         brand.setState(false);
         brand.setDeletedAt(new Timestamp(System.currentTimeMillis()));
         return brand;
+    }
+
+    @Override
+    public Brand findById(Long id) {
+        Optional<Brand> optionalBrand = brandRepository.findById(id);
+        if (optionalBrand.isPresent()) return optionalBrand.get();
+        else throw new IllegalStateException("Not found brand");
     }
 }

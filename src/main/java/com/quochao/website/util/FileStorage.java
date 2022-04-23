@@ -33,7 +33,11 @@ public class FileStorage {
         }
     }
 
-    public void removeFile(String name) throws IOException {
-        cloudinary.uploader().destroy(subFolder + "/" + name, ObjectUtils.asMap());
+    public void removeFile(String name) {
+        try {
+            cloudinary.uploader().destroy(subFolder + "/" + name, ObjectUtils.asMap());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
