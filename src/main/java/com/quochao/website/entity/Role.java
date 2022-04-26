@@ -1,5 +1,6 @@
 package com.quochao.website.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,5 +38,6 @@ public class Role implements Serializable {
     private Timestamp deletedAt;
 
     @OneToMany(mappedBy = "role")
-    private List<User> userList;
+    @JsonIgnore
+    private List<User> users;
 }

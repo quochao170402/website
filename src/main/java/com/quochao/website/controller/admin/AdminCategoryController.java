@@ -10,13 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Data
 @RestController
-@RequestMapping("/api/v1/admin/categories")
+@RequestMapping("admin/api/v1/categories")
 @CrossOrigin("*")
 public class AdminCategoryController {
-
-
     private final CategoryService categoryService;
-
 
     @GetMapping
     public ResponseEntity<?> getAll(
@@ -40,7 +37,7 @@ public class AdminCategoryController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateCategory(@ModelAttribute Category category) {
+    public ResponseEntity<?> updateCategory(@RequestBody Category category) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryService.update(category));
     }
@@ -49,5 +46,11 @@ public class AdminCategoryController {
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryService.delete(id));
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<?> enableCategory(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.enableCategory(id));
     }
 }

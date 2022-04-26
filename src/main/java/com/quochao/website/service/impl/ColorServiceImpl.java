@@ -25,11 +25,13 @@ public class ColorServiceImpl implements ColorService {
         Optional<Color> optionalColor = colorRepository.findById(color.getId());
         if (!optionalColor.isPresent()) throw new IllegalStateException("Not found color");
         Color updated = optionalColor.get();
+        Color existed = colorRepository.getByName(color.getName());
+        if (existed != null && !updated.getName().equals(existed.getName()))
+            throw new IllegalStateException("Color was existed");
         updated.setName(color.getName());
         updated.setCode(updated.getName().trim().toLowerCase().replaceAll(" ", "-"));
-        updated.setState(color.getState());
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        return color;
+        return updated;
     }
 
     @Override
@@ -63,5 +65,15 @@ public class ColorServiceImpl implements ColorService {
         return (dir.equalsIgnoreCase("asc")) ?
                 colorRepository.findAll(PageRequest.of(page, size, Sort.by(field).ascending())) :
                 colorRepository.findAll(PageRequest.of(page, size, Sort.by(field).descending()));
+    }
+
+    @Override
+    public Color enableColor(Long id) {
+        Optional<Color> optional = colorRepository.findById(id);
+        if (!optional.isPresent()) throw new IllegalStateException("Not found color");
+        Color color = optional.get();
+        color.setState(true);
+        color.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        return color;
     }
 }

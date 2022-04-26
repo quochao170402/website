@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Data
 @RestController
-@RequestMapping("api/v1/admin/colors")
+@RequestMapping("admin/api/v1/colors")
 @CrossOrigin("*")
 public class AdminColorController {
     private final ColorService colorService;
@@ -21,31 +21,31 @@ public class AdminColorController {
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(name = "field", required = false, defaultValue = "name") String field,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(colorService.findAll(page, size, field, dir));
+        return ResponseEntity.ok(colorService.findAll(page, size, field, dir));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> updateColor(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(colorService.getById(id));
+    public ResponseEntity<?> getById(@PathVariable Long id){
+        return ResponseEntity.ok(colorService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@ModelAttribute Color color){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(colorService.save(color));
+    public ResponseEntity<?> add(@RequestBody Color color){
+        return ResponseEntity.ok(colorService.save(color));
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@ModelAttribute Color color){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(colorService.update(color));
+    public ResponseEntity<?> update(@RequestBody Color color){
+        return ResponseEntity.ok(colorService.update(color));
     }
 
+    @PostMapping("{id}")
+    public ResponseEntity<?> enableColor(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(colorService.enableColor(id));
+    }
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(colorService.delete(id));
+        return ResponseEntity.ok(colorService.delete(id));
     }
 }

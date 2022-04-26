@@ -21,8 +21,8 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Page<Size> findAll(Integer page, Integer size, String field, String dir) {
-
-        return (dir.equals("asc")) ? sizeRepository.findAll(PageRequest.of(page, size, Sort.by(field).ascending())) :
+        return dir.equals("asc") ?
+                sizeRepository.findAll(PageRequest.of(page, size, Sort.by(field).ascending())) :
                 sizeRepository.findAll(PageRequest.of(page, size, Sort.by(field).descending()));
     }
 
@@ -37,10 +37,13 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Size update(Size size) {
-        if (size == null || size.getId() == null) throw new IllegalStateException("NULL");
         Optional<Size> optionalSize = sizeRepository.findById(size.getId());
         if (!optionalSize.isPresent()) throw new IllegalStateException("Not found size");
+        Size existed = sizeRepository.getSizeByName(size.getName());
         Size updated = optionalSize.get();
+        if (existed != null && !existed.getName().equals(updated.getName()))
+            throw new IllegalStateException("Size was existed");
+
         updated.setName(size.getName());
         updated.setCode(updated.getName().trim().toLowerCase().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -49,7 +52,6 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public Size delete(Long id) {
-        if (id == null) throw new IllegalStateException("NULL");
         Optional<Size> optionalSize = sizeRepository.findById(id);
         if (!optionalSize.isPresent()) throw new IllegalStateException("Not found size");
         Size size = optionalSize.get();
@@ -63,5 +65,15 @@ public class SizeServiceImpl implements SizeService {
         Optional<Size> optionalSize = sizeRepository.findById(id);
         if (optionalSize.isPresent()) return optionalSize.get();
         else throw new IllegalStateException("Not found size");
+    }
+
+    @Override
+    public Size enableSize(Long id) {
+        Optional<Size> optionalSize = sizeRepository.findById(id);
+        if (!optionalSize.isPresent()) throw new IllegalStateException("Not found size");
+        Size size = optionalSize.get();
+        size.setState(true);
+        size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        return size;
     }
 }

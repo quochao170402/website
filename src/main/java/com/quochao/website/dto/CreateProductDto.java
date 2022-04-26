@@ -19,6 +19,7 @@ public class CreateProductDto implements Serializable {
     private String description;
     private Brand brand;
     private Category category;
+    private String image;
     private MultipartFile file;
     private Set<Color> colors;
     private Set<Size> sizes;

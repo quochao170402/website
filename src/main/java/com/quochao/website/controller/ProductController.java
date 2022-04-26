@@ -15,7 +15,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    //    Return all product in db to render in home-page or shop-page. Can not return null.
+    //    Return all product in db. Can not return null.
     @GetMapping
     public ResponseEntity<?> getAllProduct(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
@@ -24,6 +24,17 @@ public class ProductController {
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productService.findAll(page, size, field, dir));
+    }
+
+    //    Return all product active in db to render in home-page or shop-page. Can not return null.
+    @GetMapping("/true")
+    public ResponseEntity<?> getAll(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(name = "field", required = false, defaultValue = "name") String field,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.findAllByState(page, size, field, dir, true));
     }
 
     //    Return product detail. using method in product detail page
@@ -70,7 +81,7 @@ public class ProductController {
                 .body(productService.findAllByColor(code, page, size, field, dir));
     }
 
-//    similar for get products by size and tag and ...
+    //    similar for get products by size and tag and ...
 
 
     //    Frontend must validate keyword before request arrive server.
@@ -81,30 +92,6 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productService.searchByKeyword(keyword));
     }
-
-    //    start crud products + getAll()
-    //    Add new product, validate product information before model attribute arrive server
-    @PostMapping
-    public ResponseEntity<?> addProduct(@ModelAttribute CreateProductDto createProductDto) {
-        System.out.println(createProductDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.save(createProductDto));
-    }
-
-    @PutMapping
-    public ResponseEntity<?> updateProduct(@ModelAttribute CreateProductDto createProductDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.updateProduct(createProductDto));
-    }
-
-    //    Delete product by product id
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.deleteProduct(id));
-    }
-
-//    end crud products
 
     @GetMapping(path = "/filter/{brandCode}")
     public ResponseEntity<?> filterMultipleField(

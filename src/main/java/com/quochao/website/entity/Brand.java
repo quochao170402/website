@@ -49,10 +49,6 @@ public class Brand implements Serializable {
     @OneToMany(mappedBy = "brand")
     private List<Product> products;
 
-    @Transient
-    @JsonIgnore
-    private MultipartFile file;
-
     @Override
     public String toString() {
         return "Brand{" +
@@ -66,4 +62,6 @@ public class Brand implements Serializable {
                 ", deletedAt=" + deletedAt +
                 '}';
     }
+
+
 }

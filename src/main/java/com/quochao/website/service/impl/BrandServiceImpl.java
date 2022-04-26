@@ -45,13 +45,7 @@ public class BrandServiceImpl implements BrandService {
         if (brandRepository.getBrandByName(brand.getName()) != null)
             throw new IllegalStateException("Brand was existed");
         brand.setCode(brand.getName().toLowerCase().trim().replaceAll(" ", "-"));
-        if (brand.getFile() != null) {
-            FileStorage fileStorage = new FileStorage(cloudinary, "brand");
-            brand.setLogo(fileStorage.saveFile(brand.getFile(), brand.getCode()));
-        } else {
-            brand.setLogo("no-image");
-        }
-
+        if (brand.getLogo() == null) brand.setLogo("no-image");
         brand.setState(true);
         brand.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return brandRepository.save(brand);
@@ -61,26 +55,38 @@ public class BrandServiceImpl implements BrandService {
     public Brand update(Brand brand) {
         if (brand == null || brand.getId() == null) throw new IllegalStateException("NULL");
 
-        Optional<Brand> optionalBrand = brandRepository.findById(brand.getId());
-        if (!optionalBrand.isPresent()) throw new IllegalStateException("Not found Brand");
+        Optional<Brand> optional = brandRepository.findById(brand.getId());
+        if (!optional.isPresent()) throw new IllegalStateException("Not found Brand");
+        Brand updated = optional.get();
+        Brand existed = brandRepository.getBrandByName(brand.getName());
+        if (existed != null && !existed.getName().equals(updated.getName()))
+            throw new IllegalStateException("Brand was existed");
 
-        Brand updated = optionalBrand.get();
-        if (brand.getName() != null)
-            updated.setName(brand.getName());
+        if (brand.getLogo() != null) updated.setLogo(brand.getLogo());
+        updated.setName(brand.getName());
         updated.setCode(updated.getName().toLowerCase().trim().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        if (brand.getFile() != null) {
-            FileStorage fileStorage = new FileStorage(cloudinary, "brand");
-            updated.setLogo(fileStorage.saveFile(brand.getFile(), updated.getCode()));
-        }
         return updated;
     }
 
     @Override
     public Brand delete(Long id) {
-        Brand brand = brandRepository.getById(id);
+        Optional<Brand> optional = brandRepository.findById(id);
+        if (!optional.isPresent()) throw new IllegalStateException("Not found brand");
+        Brand brand = optional.get();
         brand.setState(false);
         brand.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        return brand;
+    }
+
+    @Override
+    public Brand enableBrand(Long id) {
+        Optional<Brand> optional = brandRepository.findById(id);
+        if (!optional.isPresent()) throw new IllegalStateException("Not found brand");
+        Brand brand = optional.get();
+        if (brand.getState()) return brand;
+        brand.setState(true);
+        brand.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return brand;
     }
 

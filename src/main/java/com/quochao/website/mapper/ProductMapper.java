@@ -73,11 +73,9 @@ public class ProductMapper {
         product.setCompetitive(dto.getCompetitive());
         product.setShortDescription(dto.getShortDescription());
         product.setDescription(dto.getDescription());
-        product.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        product.setState(true);
         product.setBrand(dto.getBrand());
         product.setCategory(dto.getCategory());
-        product.setFile(dto.getFile());
+        product.setImage(dto.getImage());
         return product;
     }
 

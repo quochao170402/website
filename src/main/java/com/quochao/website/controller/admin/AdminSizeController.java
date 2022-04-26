@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Data
 @RestController
-@RequestMapping("api/v1/admin/sizes")
+@RequestMapping("admin/api/v1/sizes")
 @CrossOrigin("*")
 public class AdminSizeController {
     private final SizeService sizeService;
@@ -20,32 +20,31 @@ public class AdminSizeController {
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(name = "field", required = false, defaultValue = "name") String field,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(sizeService.findAll(page, size, field, dir));
+        return ResponseEntity.ok(sizeService.findAll(page, size, field, dir));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<?> getSizeById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(sizeService.getById(id));
+        return ResponseEntity.ok(sizeService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> addSize(@ModelAttribute Size size) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(sizeService.save(size));
+    public ResponseEntity<?> addSize(@RequestBody Size size) {
+        return ResponseEntity.ok(sizeService.save(size));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateSize(@ModelAttribute Size size) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(sizeService.update(size));
+    public ResponseEntity<?> updateSize(@RequestBody Size size) {
+        return ResponseEntity.ok(sizeService.update(size));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteSize(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(sizeService.delete(id));
+        return ResponseEntity.ok(sizeService.delete(id));
     }
 
+    @PostMapping("{id}")
+    public ResponseEntity<?> enableSize(@PathVariable Long id) {
+        return ResponseEntity.ok(sizeService.enableSize(id));
+    }
 }

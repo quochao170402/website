@@ -13,19 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProductService {
-    List<ProductDto> findAll();
+    List<Product> findAll();
 
-    ProductDto findByCode(String code);
+    Product findByCode(String code);
 
-    Page<ProductDto> findAll(Integer page, Integer size, String s, String field);
+    Page<Product> findAll(Integer page, Integer size, String s, String field);
 
-    List<ProductDto> searchByKeyword(String keyword);
+    List<Product> searchByKeyword(String keyword);
 
-    Page<ProductDto> findAllByCategory(String categoryCode, Integer page, Integer size, String field, String dir);
+    Page<Product> findAllByCategory(String categoryCode, Integer page, Integer size, String field, String dir);
 
-    Page<ProductDto> findAllByBrand(String code, Integer page, Integer size, String field, String dir);
+    Page<Product> findAllByBrand(String code, Integer page, Integer size, String field, String dir);
 
-    Page<ProductDto> findAllByColor(String code, Integer page, Integer size, String field, String dir);
+    Page<Product> findAllByColor(String code, Integer page, Integer size, String field, String dir);
 
     Product save(CreateProductDto createProductDto);
 
@@ -33,9 +33,11 @@ public interface ProductService {
 
     Product deleteProduct(Long id);
 
-    Page<ProductDto> filter(String brandCode, String categoryCode, String productSize, String productColor, Double minPrice, Double maxPrice, Integer page, Integer size, String field, String dir);
+    Product enableProduct(Long id);
 
-    List<ProductDto> filter(String brand, Map<String, String> map);
+    Page<Product> filter(String brandCode, String categoryCode, String productSize, String productColor, Double minPrice, Double maxPrice, Integer page, Integer size, String field, String dir);
+
+    List<Product> filter(String brand, Map<String, String> map);
 
     ProductDetailDto findById(Long id);
 
@@ -43,7 +45,10 @@ public interface ProductService {
 
     List<Image> saveImages(ProductImagesDto productImagesDto);
 
-    Image updateImages(Long id, MultipartFile productImagesDto);
+    Image updateImages(Long id,String image);
 
     Boolean deleteImages(Long id);
+
+    Page<Product> findAllByState(Integer page, Integer size, String field, String dir, boolean state);
+
 }

@@ -1,9 +1,9 @@
 package com.quochao.website.service.impl;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.quochao.website.dto.CreateProductDto;
 import com.quochao.website.dto.ProductDetailDto;
-import com.quochao.website.dto.ProductDto;
 import com.quochao.website.dto.ProductImagesDto;
 import com.quochao.website.entity.Image;
 import com.quochao.website.entity.Product;
@@ -22,12 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Data
 @Service
@@ -41,34 +41,38 @@ public class ProductServiceImpl implements ProductService {
     private final ImageService imageService;
 
     @Override
-    public List<ProductDto> findAll() {
-        return productRepository.findAll().stream()
-                .map(ProductMapper.getINSTANCE()::convertToDto)
-                .collect(Collectors.toList());
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+
+    @Override
+    public Page<Product> findAllByState(Integer page, Integer size, String field, String dir, boolean state) {
+        return dir.equals("desc") ?
+                productRepository.findAllByState(PageRequest.of(page, size, Sort.by(field).descending()), state) :
+                productRepository.findAllByState(PageRequest.of(page, size, Sort.by(field).ascending()), state);
     }
 
     @Override
-    public ProductDto findByCode(String code) {
-        return ProductMapper.getINSTANCE().convertToDto(productRepository.findProductByCode(code));
+    public Product findByCode(String code) {
+        Optional<Product> optional = productRepository.findProductByCode(code);
+        return optional.orElseThrow(() -> new IllegalStateException("Not found product"));
     }
 
     @Override
-    public Page<ProductDto> findAll(Integer page, Integer size, String field, String dir) {
-        Page<Product> pageEntity = dir.equals("desc") ?
+    public Page<Product> findAll(Integer page, Integer size, String field, String dir) {
+        return dir.equals("desc") ?
                 productRepository.findAll(PageRequest.of(page, size, Sort.by(field).descending())) :
                 productRepository.findAll(PageRequest.of(page, size, Sort.by(field).ascending()));
-        return ProductMapper.getINSTANCE().convertPageEntityToDto(pageEntity);
     }
 
     @Override
-    public List<ProductDto> searchByKeyword(String keyword) {
-        return productRepository.searchProductByKeyword(keyword.trim().toLowerCase().replaceAll(" ", "-")).stream()
-                .map(ProductMapper.getINSTANCE()::convertToDto)
-                .collect(Collectors.toList());
+    public List<Product> searchByKeyword(String keyword) {
+        return productRepository.searchProductByKeyword(keyword.trim().toLowerCase().replaceAll(" ", "-"));
     }
 
     @Override
-    public Page<ProductDto> findAllByCategory(String categoryCode, Integer page, Integer size, String field, String dir) {
+    public Page<Product> findAllByCategory(String categoryCode, Integer page, Integer size, String field, String dir) {
         if (categoryCode == null || categoryCode.isEmpty())
             throw new IllegalStateException("Category code invalid");
 
@@ -80,11 +84,11 @@ public class ProductServiceImpl implements ProductService {
         if (products.isEmpty())
             throw new IllegalStateException("Not found category");
 
-        return ProductMapper.getINSTANCE().convertPageEntityToDto(products);
+        return products;
     }
 
     @Override
-    public Page<ProductDto> findAllByBrand(String brandCode, Integer page, Integer size, String field, String dir) {
+    public Page<Product> findAllByBrand(String brandCode, Integer page, Integer size, String field, String dir) {
         if (brandCode == null || brandCode.isEmpty())
             throw new IllegalStateException("Brand brandCode invalid");
 
@@ -96,11 +100,11 @@ public class ProductServiceImpl implements ProductService {
         if (products.isEmpty())
             throw new IllegalStateException("Not found brand");
 
-        return ProductMapper.getINSTANCE().convertPageEntityToDto(products);
+        return products;
     }
 
     @Override
-    public Page<ProductDto> findAllByColor(String code, Integer page, Integer size, String field, String dir) {
+    public Page<Product> findAllByColor(String code, Integer page, Integer size, String field, String dir) {
         if (code == null || code.isEmpty())
             throw new IllegalStateException("Brand brandCode invalid");
 
@@ -111,22 +115,22 @@ public class ProductServiceImpl implements ProductService {
         if (products.isEmpty())
             throw new IllegalStateException("Not found color");
 
-        return ProductMapper.getINSTANCE().convertPageEntityToDto(products);
+        return products;
     }
 
 
     @Override
-    public Page<ProductDto> filter(String brandCode, String categoryCode,
-                                   String productSize, String productColor,
-                                   Double minPrice, Double maxPrice,
-                                   Integer page, Integer size,
-                                   String field, String dir) {
+    public Page<Product> filter(String brandCode, String categoryCode,
+                                String productSize, String productColor,
+                                Double minPrice, Double maxPrice,
+                                Integer page, Integer size,
+                                String field, String dir) {
 
         return null;
     }
 
     @Override
-    public List<ProductDto> filter(String brand, Map<String, String> map) {
+    public List<Product> filter(String brand, Map<String, String> map) {
         String category = map.get("categoryCode");
         String productSize = map.get("product-size");
         String productColor = map.get("product-color");
@@ -157,52 +161,46 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product save(CreateProductDto createProductDto) {
-        if (createProductDto == null) throw new IllegalStateException("Product null");
+    public Product save(CreateProductDto createProduct) {
+        if (createProduct == null) throw new IllegalStateException("Product null");
 
-        if (productRepository.findProductByName(createProductDto.getName()).isPresent())
+        if (productRepository.findProductByName(createProduct.getName()).isPresent())
             throw new IllegalStateException("Product was existed");
 
-        Product product = ProductMapper.getINSTANCE().createProductToEntity(createProductDto);
+        Product product = ProductMapper.getINSTANCE().createProductToEntity(createProduct);
 
-        MultipartFile file = product.getFile();
-        String imageUrl = "no-image";
-        FileStorage fileStorage = new FileStorage(cloudinary, "product");
-        if (file != null && !file.isEmpty()) {
-            imageUrl = fileStorage.saveFile(file, product.getCode());
-        }
-
-        product.setImage(imageUrl);
+        if (product.getImage() == null) product.setImage("no-image");
+        product.setState(true);
+        product.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         productRepository.save(product);
-        product.setProductSizes(productSizeService.addAll(product, createProductDto.getSizes()));
-        product.setProductColors(productColorService.addAll(product, createProductDto.getColors()));
+        product.setProductSizes(productSizeService.addAll(product, createProduct.getSizes()));
+        product.setProductColors(productColorService.addAll(product, createProduct.getColors()));
         return product;
     }
 
     @Override
-    public Product updateProduct(CreateProductDto createProductDto) {
-        if (createProductDto == null || createProductDto.getId() == null) throw new IllegalStateException("NULL");
-        Optional<Product> optionalProduct = productRepository.findById(createProductDto.getId());
+    public Product updateProduct(CreateProductDto createProduct) {
+        if (createProduct == null || createProduct.getId() == null) throw new IllegalStateException("NULL");
+        Optional<Product> optionalProduct = productRepository.findById(createProduct.getId());
         if (!optionalProduct.isPresent()) throw new IllegalStateException("Not found product");
-
         Product updated = optionalProduct.get();
+        Product existed = productRepository.getByName(createProduct.getName());
+        if (existed != null && !updated.getName().equals(existed.getName()))
+            throw new IllegalStateException("Product was existed");
 
-        updated.setName(createProductDto.getName());
-        updated.setCode(createProductDto.getName().trim().toLowerCase().replaceAll(" ", "-"));
-        updated.setPrice(createProductDto.getPrice());
-        updated.setCompetitive(createProductDto.getCompetitive());
-        updated.setShortDescription(createProductDto.getShortDescription());
-        updated.setDescription(createProductDto.getDescription());
+        updated.setName(createProduct.getName());
+        updated.setCode(createProduct.getName().trim().toLowerCase().replaceAll(" ", "-"));
+        updated.setPrice(createProduct.getPrice());
+        updated.setCompetitive(createProduct.getCompetitive());
+        updated.setShortDescription(createProduct.getShortDescription());
+        updated.setDescription(createProduct.getDescription());
+        if (createProduct.getBrand() != null) updated.setBrand(createProduct.getBrand());
+        if (createProduct.getCategory() != null) updated.setCategory(createProduct.getCategory());
+        if (createProduct.getImage() != null) updated.setImage(createProduct.getImage());
+
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
-        MultipartFile file = createProductDto.getFile();
-        if (file != null && !file.isEmpty()) {
-            FileStorage fileStorage = new FileStorage(cloudinary, "product");
-            String filename = fileStorage.saveFile(file, updated.getCode());
-            updated.setImage(filename);
-        }
-        updated.setProductColors(productColorService.updateAll(updated, createProductDto.getColors()));
-        updated.setProductSizes(productSizeService.updateAll(updated, createProductDto.getSizes()));
+        updated.setProductColors(productColorService.updateAll(updated, createProduct.getColors()));
+        updated.setProductSizes(productSizeService.updateAll(updated, createProduct.getSizes()));
         return updated;
     }
 
@@ -218,36 +216,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product enableProduct(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (!optionalProduct.isPresent()) throw new IllegalStateException("Not found product");
+        Product product = optionalProduct.get();
+        if (product.getState()) return product;
+        product.setState(true);
+        product.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        return product;
+    }
+
+    @Override
     public List<Image> saveImages(ProductImagesDto productImagesDto) {
         Optional<Product> optionalProduct = productRepository.findById(productImagesDto.getProductId());
         if (!optionalProduct.isPresent()) throw new IllegalStateException("Not found product");
         Product product = optionalProduct.get();
-        int size = product.getImages().size();
         List<Image> result = new ArrayList<>();
-        if (productImagesDto.getFiles().isEmpty()) return result;
-        FileStorage fileStorage = new FileStorage(cloudinary, "product");
-
-        for (MultipartFile file : productImagesDto.getFiles()
+        for (String imageUrl : productImagesDto.getImages()
         ) {
             Image image = new Image();
             image.setProduct(product);
-            if (file != null && !file.isEmpty()) {
-                image.setImage(fileStorage.saveFile(file, product.getCode() + "-image-" + (size++)));
-            } else image.setImage("no-image");
+            image.setImage(imageUrl);
             result.add(imageService.save(image));
         }
         return result;
     }
 
     @Override
-    public Image updateImages(Long id, MultipartFile file) {
+    public Image updateImages(Long id, String imageUrl) {
         Image image = imageService.findById(id);
         if (image == null) throw new IllegalStateException("Not found image");
-
-        FileStorage fileStorage = new FileStorage(cloudinary, "product");
-        if (file != null && !file.isEmpty()) {
-            image.setImage(fileStorage.saveFile(file, splitImageUrl(image.getImage())));
-        }
+        image.setImage(imageUrl);
         return image;
     }
 
@@ -257,12 +256,15 @@ public class ProductServiceImpl implements ProductService {
         return url.substring(indexStart, indexEnd);
     }
 
-
     @Override
     public Boolean deleteImages(Long id) {
         Image image = imageService.findById(id);
         FileStorage fileStorage = new FileStorage(cloudinary, "product");
-        fileStorage.removeFile(splitImageUrl(image.getImage()));
+        try {
+            cloudinary.uploader().destroy("image" + "/" + splitImageUrl(image.getImage()), ObjectUtils.asMap());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return imageService.delete(id);
     }
 }

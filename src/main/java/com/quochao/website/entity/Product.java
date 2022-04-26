@@ -64,15 +64,12 @@ public class Product implements Serializable {
     private Brand brand;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private List<Image> images;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private List<ProductColor> productColors;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private List<ProductSize> productSizes;
 
     @OneToMany(mappedBy = "product")
@@ -82,8 +79,4 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<OrderDetail> orderDetails;
-
-    @Transient
-    @JsonIgnore
-    private MultipartFile file;
 }

@@ -32,5 +32,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product getByName(String name);
 
-    Product findProductByCode(String code);
+    Optional<Product> findProductByCode(String code);
+
+    Optional<Product> findByCodeAndState(String code, Boolean state);
+
+    Page<Product> findAllByState(Pageable pageable,boolean state);
 }

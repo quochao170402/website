@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/brands")
+@RequestMapping("admin/api/v1/brands")
 @Data
 @CrossOrigin("*")
 public class AdminBrandController {
@@ -25,19 +25,19 @@ public class AdminBrandController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> addBrand(@ModelAttribute Brand brand) {
+    public ResponseEntity<?> addBrand(@RequestBody Brand brand) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.save(brand));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateBrand(@ModelAttribute Brand brand) {
+    public ResponseEntity<?> updateBrand(@RequestBody Brand brand) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.update(brand));
     }
@@ -46,5 +46,11 @@ public class AdminBrandController {
     public ResponseEntity<?> deleteBrand(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.delete(id));
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<?> enableBrand(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(brandService.enableBrand(id));
     }
 }

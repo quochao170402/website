@@ -34,7 +34,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category save(Category category) {
-        if (getCategoryByName(category.getName()) != null) throw new IllegalStateException("Category was existed.");
+        if (categoryRepository.getCategoryByName(category.getName()) != null)
+            throw new IllegalStateException("Category was existed.");
         category.setCode(category.getName().trim().toLowerCase().replaceAll(" ", "-"));
         category.setState(true);
         category.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -45,8 +46,11 @@ public class CategoryServiceImpl implements CategoryService {
     public Category update(Category category) {
         if (category == null || category.getId() == null) throw new IllegalStateException("NULL");
         Optional<Category> optionalCategory = categoryRepository.findById(category.getId());
+        Category existed = categoryRepository.getCategoryByName(category.getName());
         if (!optionalCategory.isPresent()) throw new IllegalStateException("Not found category");
         Category updated = optionalCategory.get();
+        if (existed != null && !updated.getName().equals(existed.getName()))
+            throw new IllegalStateException("Category was existed.");
         updated.setName(category.getName());
         updated.setCode(category.getName().trim().toLowerCase().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -55,10 +59,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category delete(Long id) {
-        if (id == null) throw new IllegalStateException("ID is null");
-        Category category = categoryRepository.getById(id);
+        Optional<Category> optional = categoryRepository.findById(id);
+        if (!optional.isPresent()) throw new IllegalStateException("Not found category");
+        Category category = optional.get();
         category.setState(false);
         category.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        return category;
+    }
+
+    @Override
+    public Category enableCategory(Long id) {
+        Optional<Category> optional = categoryRepository.findById(id);
+        if (!optional.isPresent()) throw new IllegalStateException("Not found category");
+        Category category = optional.get();
+        if (category.getState()) return category;
+        category.setState(true);
+        category.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return category;
     }
 
