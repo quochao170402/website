@@ -24,6 +24,5 @@ public class ProductColor implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "color_id")
-    @JsonIgnore
     private Color color;
 }

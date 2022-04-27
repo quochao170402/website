@@ -24,6 +24,5 @@ public class ProductSize implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "size_id")
-    @JsonIgnore
     private Size size;
 }
