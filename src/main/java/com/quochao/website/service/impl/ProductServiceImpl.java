@@ -17,16 +17,16 @@ import com.quochao.website.util.FileStorage;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Data
@@ -125,23 +125,14 @@ public class ProductServiceImpl implements ProductService {
                                 Double minPrice, Double maxPrice,
                                 Integer page, Integer size,
                                 String field, String dir) {
-
-        return null;
+        if (maxPrice == null) maxPrice = Double.MAX_VALUE;
+        Pageable pageable = (dir.equalsIgnoreCase("asc")) ?
+                PageRequest.of(page, size, Sort.by(field).ascending()) :
+                PageRequest.of(page, size, Sort.by(field).descending());
+        System.out.println(brandCode+" "+categoryCode+ " "+productSize+" "+productColor);
+        return productRepository.filter(brandCode, categoryCode, productSize, productColor, minPrice, maxPrice, pageable);
     }
 
-    @Override
-    public List<Product> filter(String brand, Map<String, String> map) {
-        String category = map.get("categoryCode");
-        String productSize = map.get("product-size");
-        String productColor = map.get("product-color");
-        String minPrice = map.get("min");
-        String maxPrice = map.get("max");
-        String page = map.get("page");
-        String size = map.get("size");
-        String field = map.get("field");
-        String dir = map.get("dir");
-        return null;
-    }
 
     //Service for admin
     @Override

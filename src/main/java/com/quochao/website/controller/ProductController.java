@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(path = "/api/v1/products")
 @CrossOrigin("*")
@@ -39,7 +41,7 @@ public class ProductController {
     }
 
     //    Return product detail. using method in product detail page
-    @GetMapping("{code}")
+    @GetMapping("detail/{code}")
     public ResponseEntity<?> getProduct(@PathVariable String code) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productService.findByCode(code));
@@ -94,10 +96,10 @@ public class ProductController {
                 .body(productService.searchByKeyword(keyword));
     }
 
-    @GetMapping(path = "/filter/{brandCode}")
+    @GetMapping(path = "/filter")
     public ResponseEntity<?> filterMultipleField(
-            @PathVariable String brandCode,
-            @RequestParam(name = "category-code", required = false, defaultValue = "") String categoryCode,
+            @RequestParam(name = "brand-code", required = false, defaultValue = "") String brand,
+            @RequestParam(name = "category-code", required = false, defaultValue = "") String category,
             @RequestParam(name = "product-size", required = false, defaultValue = "") String productSize,
             @RequestParam(name = "product-color", required = false, defaultValue = "") String productColor,
             @RequestParam(name = "min", required = false, defaultValue = "0") Double minPrice,
@@ -106,8 +108,8 @@ public class ProductController {
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(name = "field", required = false, defaultValue = "name") String field,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.filter(brandCode, categoryCode, productSize, productColor, minPrice, maxPrice, page, size, field, dir));
+        return ResponseEntity.ok(productService.filter(brand, category, productSize, productColor, minPrice, maxPrice, page, size, field, dir));
     }
+
 
 }
