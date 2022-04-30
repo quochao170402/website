@@ -31,7 +31,7 @@ public class AdminCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCategory(@ModelAttribute Category category) {
+    public ResponseEntity<?> addCategory(@RequestBody Category category) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryService.save(category));
     }
