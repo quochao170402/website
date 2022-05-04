@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("admin/api/v1/products")
@@ -31,12 +32,12 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody CreateProductDto createProductDto) {
+    public ResponseEntity<?> addProduct(@ModelAttribute CreateProductDto createProductDto) {
         return ResponseEntity.ok(productService.save(createProductDto));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateProduct(@RequestBody CreateProductDto createProductDto) {
+    public ResponseEntity<?> updateProduct(@ModelAttribute CreateProductDto createProductDto) {
         return ResponseEntity.ok(productService.updateProduct(createProductDto));
     }
 
@@ -51,14 +52,14 @@ public class AdminProductController {
     }
 
     @PostMapping("/images")
-    public ResponseEntity<?> addProductImages(@RequestBody ProductImagesDto productImagesDto) {
+    public ResponseEntity<?> addProductImages(@ModelAttribute ProductImagesDto productImagesDto) {
         return ResponseEntity.ok(productService.saveImages(productImagesDto));
     }
 
     @PutMapping("/images/{id}")
     public ResponseEntity<?> updateProductImages(
             @PathVariable Long id,
-            @RequestBody String imageUrl) {
+            @ModelAttribute MultipartFile imageUrl) {
         return ResponseEntity.ok(productService.updateImages(id, imageUrl));
     }
 

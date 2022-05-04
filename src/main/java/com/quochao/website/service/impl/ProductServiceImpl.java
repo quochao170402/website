@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -129,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = (dir.equalsIgnoreCase("asc")) ?
                 PageRequest.of(page, size, Sort.by(field).ascending()) :
                 PageRequest.of(page, size, Sort.by(field).descending());
-        System.out.println(brandCode+" "+categoryCode+ " "+productSize+" "+productColor);
+        System.out.println(brandCode + " " + categoryCode + " " + productSize + " " + productColor);
         return productRepository.filter(brandCode, categoryCode, productSize, productColor, minPrice, maxPrice, pageable);
     }
 
@@ -159,8 +160,10 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalStateException("Product was existed");
 
         Product product = ProductMapper.getINSTANCE().createProductToEntity(createProduct);
-
-        if (product.getImage() == null) product.setImage("no-image");
+        if (createProduct.getFile() != null) {
+            FileStorage fileStorage = new FileStorage(cloudinary, "product");
+            product.setImage(fileStorage.saveFile(createProduct.getFile(), product.getCode()));
+        }
         product.setState(true);
         product.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         productRepository.save(product);
@@ -187,8 +190,10 @@ public class ProductServiceImpl implements ProductService {
         updated.setDescription(createProduct.getDescription());
         if (createProduct.getBrand() != null) updated.setBrand(createProduct.getBrand());
         if (createProduct.getCategory() != null) updated.setCategory(createProduct.getCategory());
-        if (createProduct.getImage() != null) updated.setImage(createProduct.getImage());
-
+        if (createProduct.getFile() != null) {
+            FileStorage fileStorage = new FileStorage(cloudinary, "product");
+            updated.setImage(fileStorage.saveFile(createProduct.getFile(), updated.getCode()));
+        }
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         updated.setProductColors(productColorService.updateAll(updated, createProduct.getColors()));
         updated.setProductSizes(productSizeService.updateAll(updated, createProduct.getSizes()));
@@ -222,22 +227,29 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> optionalProduct = productRepository.findById(productImagesDto.getProductId());
         if (!optionalProduct.isPresent()) throw new IllegalStateException("Not found product");
         Product product = optionalProduct.get();
-        List<Image> result = new ArrayList<>();
-        for (String imageUrl : productImagesDto.getImages()
-        ) {
-            Image image = new Image();
-            image.setProduct(product);
-            image.setImage(imageUrl);
-            result.add(imageService.save(image));
+        if (productImagesDto.getImages()!=null){
+            List<Image> result = new ArrayList<>();
+            FileStorage fileStorage = new FileStorage(cloudinary,"product");
+            for (MultipartFile url : productImagesDto.getImages()
+            ) {
+                Image image = new Image();
+                image.setProduct(product);
+                image.setImage(fileStorage.saveFile(url,product.getCode()+product.getImages().size()+1));
+                result.add(imageService.save(image));
+            }
+            return result;
         }
-        return result;
+        return null;
     }
 
     @Override
-    public Image updateImages(Long id, String imageUrl) {
+    public Image updateImages(Long id, MultipartFile imageUrl) {
         Image image = imageService.findById(id);
         if (image == null) throw new IllegalStateException("Not found image");
-        image.setImage(imageUrl);
+        if (imageUrl!=null){
+            FileStorage fileStorage = new FileStorage(cloudinary,"product");
+            image.setImage(fileStorage.saveFile(imageUrl,image.getImage()));
+        }
         return image;
     }
 

@@ -10,5 +10,5 @@ import java.util.Set;
 @Data
 public class ProductImagesDto implements Serializable {
     private Long productId;
-    private List<String> images;
+    private List<MultipartFile> images;
 }

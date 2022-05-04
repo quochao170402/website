@@ -47,7 +47,6 @@ public class ReviewServiceImpl implements ReviewService {
         if (!updated.getUser().equals(user)) throw new IllegalStateException("Can't edit other people's reviews");
 
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        updated.setRate(review.getRate());
         updated.setContent(review.getContent());
         return review;
     }

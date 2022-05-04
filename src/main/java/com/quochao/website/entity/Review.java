@@ -27,9 +27,6 @@ public class Review implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "rate")
-    private Double rate;
-
     @Column(name = "content", nullable = false)
     private String content;
 
