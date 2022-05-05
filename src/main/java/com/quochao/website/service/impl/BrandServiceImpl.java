@@ -45,7 +45,10 @@ public class BrandServiceImpl implements BrandService {
         if (brandRepository.getBrandByName(brand.getName()) != null)
             throw new IllegalStateException("Brand was existed");
         brand.setCode(brand.getName().toLowerCase().trim().replaceAll(" ", "-"));
-        if (brand.getLogo() == null) brand.setLogo("no-image");
+        if (brand.getFile()!=null){
+            FileStorage fileStorage = new FileStorage(cloudinary,"brand");
+            brand.setLogo(fileStorage.saveFile(brand.getFile(),brand.getCode()));
+        }
         brand.setState(true);
         brand.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return brandRepository.save(brand);
@@ -62,10 +65,13 @@ public class BrandServiceImpl implements BrandService {
         if (existed != null && !existed.getName().equals(updated.getName()))
             throw new IllegalStateException("Brand was existed");
 
-        if (brand.getLogo() != null) updated.setLogo(brand.getLogo());
         updated.setName(brand.getName());
         updated.setCode(updated.getName().toLowerCase().trim().replaceAll(" ", "-"));
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        if (brand.getFile()!=null){
+            FileStorage fileStorage = new FileStorage(cloudinary,"brand");
+            updated.setLogo(fileStorage.saveFile(brand.getFile(),updated.getCode()));
+        }
         return updated;
     }
 

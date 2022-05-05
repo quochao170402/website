@@ -29,12 +29,12 @@ public class AdminUserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody User user) {
+    public ResponseEntity<?> save(@ModelAttribute User user) {
         return ResponseEntity.ok(userService.save(user));
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody User user) {
+    public ResponseEntity<?> update(@ModelAttribute User user) {
         return ResponseEntity.ok(userService.update(user));
     }
 

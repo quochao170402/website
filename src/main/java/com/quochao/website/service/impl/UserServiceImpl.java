@@ -79,7 +79,10 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setState(true);
         user.setRole(roleService.getRoleById(2L));
-        if (user.getImage() == null) user.setImage("no-image");
+        if (user.getFile()!=null){
+            FileStorage fileStorage = new FileStorage(cloudinary,"user");
+            user.setImage(fileStorage.saveFile(user.getFile(),user.getUsername()));
+        }
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return userRepository.save(user);
     }
@@ -93,7 +96,10 @@ public class UserServiceImpl implements UserService {
         updated.setEmail(updated.getEmail());
         updated.setAddress(updated.getAddress());
         updated.setPhone(updated.getPhone());
-        if (user.getImage() != null) updated.setImage("no-image");
+        if (user.getFile()!=null){
+            FileStorage fileStorage = new FileStorage(cloudinary,"user");
+            updated.setImage(fileStorage.saveFile(user.getFile(),updated.getUsername()));
+        }
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return updated;
     }

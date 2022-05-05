@@ -31,13 +31,13 @@ public class AdminBrandController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addBrand(@RequestBody Brand brand) {
+    public ResponseEntity<?> addBrand(@ModelAttribute Brand brand) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.save(brand));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateBrand(@RequestBody Brand brand) {
+    public ResponseEntity<?> updateBrand(@ModelAttribute Brand brand) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.update(brand));
     }

@@ -27,7 +27,7 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateInfo(@RequestBody User user) {
+    public ResponseEntity<?> updateInfo(@ModelAttribute User user) {
         return ResponseEntity.ok(userService.updateInfo(user));
     }
 

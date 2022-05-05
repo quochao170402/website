@@ -72,6 +72,10 @@ public class User implements Serializable {
     @JsonIgnore
     private List<Review> reviews;
 
+    @JsonIgnore
+    @Transient
+    private MultipartFile file;
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
