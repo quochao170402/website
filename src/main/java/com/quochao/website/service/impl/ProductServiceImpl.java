@@ -3,22 +3,19 @@ package com.quochao.website.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.quochao.website.dto.CreateProductDto;
+import com.quochao.website.dto.FieldsDto;
 import com.quochao.website.dto.ProductDetailDto;
 import com.quochao.website.dto.ProductImagesDto;
-import com.quochao.website.entity.Image;
-import com.quochao.website.entity.Product;
+import com.quochao.website.entity.*;
 import com.quochao.website.mapper.ProductMapper;
-import com.quochao.website.repository.ProductRepository;
+import com.quochao.website.repository.*;
 import com.quochao.website.service.ImageService;
 import com.quochao.website.service.ProductColorService;
 import com.quochao.website.service.ProductService;
 import com.quochao.website.service.ProductSizeService;
 import com.quochao.website.util.FileStorage;
 import lombok.Data;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +34,11 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductColorService productColorService;
     private final ProductSizeService productSizeService;
+
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
+    private final ColorRepository colorRepository;
+    private final SizeRepository sizeRepository;
     private final Cloudinary cloudinary;
 
     private final ImageService imageService;
@@ -102,6 +104,28 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalStateException("Not found brand");
 
         return products;
+    }
+
+    @Override
+    public List<Product> findLatestProducts() {
+        List<Product> products = productRepository.findAll(Sort.by("createdAt").descending());
+        return products.size() >= 5 ? products.subList(0, 5) : products;
+    }
+
+    @Override
+    public List<Product> findHotProducts() {
+        List<Product> products = productRepository.findHotProducts();
+        return products.size() >= 5 ? products.subList(0, 5) : products;
+    }
+
+    @Override
+    public FieldsDto getAllFields() {
+        FieldsDto dto = new FieldsDto();
+        dto.setBrands(brandRepository.findAll());
+        dto.setCategories(categoryRepository.findAll());
+        dto.setColors(colorRepository.findAll());
+        dto.setSizes(sizeRepository.findAll());
+        return dto;
     }
 
     @Override
@@ -227,14 +251,14 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> optionalProduct = productRepository.findById(productImagesDto.getProductId());
         if (!optionalProduct.isPresent()) throw new IllegalStateException("Not found product");
         Product product = optionalProduct.get();
-        if (productImagesDto.getImages()!=null){
+        if (productImagesDto.getImages() != null) {
             List<Image> result = new ArrayList<>();
-            FileStorage fileStorage = new FileStorage(cloudinary,"product");
+            FileStorage fileStorage = new FileStorage(cloudinary, "product");
             for (MultipartFile url : productImagesDto.getImages()
             ) {
                 Image image = new Image();
                 image.setProduct(product);
-                image.setImage(fileStorage.saveFile(url,product.getCode()+product.getImages().size()+1));
+                image.setImage(fileStorage.saveFile(url, product.getCode() + product.getImages().size() + 1));
                 result.add(imageService.save(image));
             }
             return result;
@@ -246,9 +270,9 @@ public class ProductServiceImpl implements ProductService {
     public Image updateImages(Long id, MultipartFile imageUrl) {
         Image image = imageService.findById(id);
         if (image == null) throw new IllegalStateException("Not found image");
-        if (imageUrl!=null){
-            FileStorage fileStorage = new FileStorage(cloudinary,"product");
-            image.setImage(fileStorage.saveFile(imageUrl,image.getImage()));
+        if (imageUrl != null) {
+            FileStorage fileStorage = new FileStorage(cloudinary, "product");
+            image.setImage(fileStorage.saveFile(imageUrl, image.getImage()));
         }
         return image;
     }

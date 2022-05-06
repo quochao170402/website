@@ -40,6 +40,24 @@ public class ProductController {
                 .body(productService.findAllByState(page, size, field, dir, true));
     }
 
+    @GetMapping("/latest")
+    public ResponseEntity<?> getLatestProducts() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.findLatestProducts());
+    }
+
+    @GetMapping("/hot")
+    public ResponseEntity<?> getHotProducts() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.findHotProducts());
+    }
+
+    @GetMapping("/fields")
+    public ResponseEntity<?> getAllFields() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.getAllFields());
+    }
+
     //    Return product detail. using method in product detail page
     @GetMapping("detail/{code}")
     public ResponseEntity<?> getProduct(@PathVariable String code) {

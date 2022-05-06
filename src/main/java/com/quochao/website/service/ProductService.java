@@ -1,6 +1,7 @@
 package com.quochao.website.service;
 
 import com.quochao.website.dto.CreateProductDto;
+import com.quochao.website.dto.FieldsDto;
 import com.quochao.website.dto.ProductDetailDto;
 import com.quochao.website.dto.ProductImagesDto;
 import com.quochao.website.entity.Image;
@@ -46,4 +47,10 @@ public interface ProductService {
     Boolean deleteImages(Long id);
 
     Page<Product> findAllByState(Integer page, Integer size, String field, String dir, boolean state);
+
+    List<Product> findLatestProducts();
+
+    List<Product> findHotProducts();
+
+    FieldsDto getAllFields();
 }

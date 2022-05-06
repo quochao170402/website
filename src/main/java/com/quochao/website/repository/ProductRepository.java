@@ -39,25 +39,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAllByState(Pageable pageable, boolean state);
 
-//    @Query("select p.name " +
-//            "from Product as p join Brand as b on p.brand.id = b.id")
-//    List<Product> filter(@Param("brandCode") String brandCode, String category, String productSize, String productColor, Double minPrice, Double maxPrice);
-
-//    @Query("select p " +
-//            "from Product as p " +
-//            "join Brand as b on p.brand = b " +
-//            "join Category as c on p.category = c " +
-//            "join ProductSize as ps on ps.product = p " +
-//            "join Size as s on ps.size = s " +
-//            "join ProductColor as pc on pc.product = p " +
-//            "join  Color as co on pc.color = co " +
-//            "where (b.code = :brandCode) " +
-//            "and (c.code = :category) " +
-//            "and (s.code = :productSize) " +
-//            "and (co.code = :productColor) " +
-//            "and (p.price> :min) " +
-//            "and (p.price< :max) ")
-
     @Query("select DISTINCT p " +
             "from Product as p " +
             "join Brand as b on p.brand = b " +
@@ -75,4 +56,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> filter(@Param("brand") String brandCode, @Param("category") String category,
                          @Param("size") String productSize, @Param("color") String productColor,
                          @Param("min") Double min, @Param("max") Double max, Pageable pageable);
+
+    @Query("select p from Product as p join OrderDetail as od on od.product = p group by p.id order by count(od.quantity) desc ")
+    List<Product> findHotProducts();
 }
