@@ -22,4 +22,6 @@ public interface UserService extends UserDetailsService {
     User updateInfo(User user);
 
     User enableUser(Long id);
+
+    User resetPassword(User user, String newPassword);
 }

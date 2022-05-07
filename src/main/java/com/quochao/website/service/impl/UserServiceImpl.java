@@ -73,15 +73,16 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent())
             throw new IllegalStateException("Username already exist");
+        System.out.println(user);
         if (!user.getPassword().equals(user.getConfirmPassword()))
             throw new IllegalStateException("Password doesn't match");
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setState(true);
         user.setRole(roleService.getRoleById(2L));
-        if (user.getFile()!=null){
-            FileStorage fileStorage = new FileStorage(cloudinary,"user");
-            user.setImage(fileStorage.saveFile(user.getFile(),user.getUsername()));
+        if (user.getFile() != null) {
+            FileStorage fileStorage = new FileStorage(cloudinary, "user");
+            user.setImage(fileStorage.saveFile(user.getFile(), user.getUsername()));
         }
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return userRepository.save(user);
@@ -96,9 +97,9 @@ public class UserServiceImpl implements UserService {
         updated.setEmail(updated.getEmail());
         updated.setAddress(updated.getAddress());
         updated.setPhone(updated.getPhone());
-        if (user.getFile()!=null){
-            FileStorage fileStorage = new FileStorage(cloudinary,"user");
-            updated.setImage(fileStorage.saveFile(user.getFile(),updated.getUsername()));
+        if (user.getFile() != null) {
+            FileStorage fileStorage = new FileStorage(cloudinary, "user");
+            updated.setImage(fileStorage.saveFile(user.getFile(), updated.getUsername()));
         }
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return updated;
@@ -144,6 +145,13 @@ public class UserServiceImpl implements UserService {
         User user = optional.get();
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         user.setState(true);
+        return user;
+    }
+
+    @Override
+    public User resetPassword(User user, String newPassword) {
+        Optional<User> old = userRepository.findByUsername(user.getUsername());
+        old.ifPresent(value -> value.setPassword(passwordEncoder.encode(newPassword)));
         return user;
     }
 }

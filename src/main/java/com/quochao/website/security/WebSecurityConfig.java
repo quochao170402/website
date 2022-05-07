@@ -6,6 +6,7 @@ import com.quochao.website.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/v1/products/**", "/api/v1/orders", "/login",
-                        "/logout", "/api/v1/register", "/", "/api/v1/feedbacks/**","/api/v1/feedbacks").permitAll()
+                        "/logout", "/api/v1/register", "/", "/api/v1/feedbacks/**","/api/v1/feedbacks", "/api/v1/auth/**").permitAll()
 
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
 
@@ -55,13 +56,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .anyRequest().authenticated()
 
-                .and()
-                .formLogin().loginPage("/login").permitAll()
+//                .and()
+//                .formLogin().loginPage("/login").successForwardUrl("/home").permitAll()
+//                .and().formLogin().permitAll()
 
                 .and()
                 .logout().deleteCookies("JSESSIONID").permitAll()
 
                 .and()
                 .httpBasic();
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
