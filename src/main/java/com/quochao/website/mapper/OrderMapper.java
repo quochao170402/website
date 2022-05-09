@@ -31,7 +31,7 @@ public class OrderMapper {
         order.setEmail(customerDto.getEmail());
         order.setPhone(customerDto.getPhone());
         order.setCustomerName(customerDto.getName());
-        order.setState(false);
+        order.setState(true);
         return order;
     }
 
