@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Data
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+//@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class OrderServiceImpl implements OrderService {
     private Map<String, CartItemDto> cart = new HashMap<>();
 
@@ -95,6 +95,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order checkout(CustomerDto customerDto, User user) {
+        customerDto.getCart().stream().forEach(item -> addToCart(item.getCode(),item.getQuantity()));
         if (cart.isEmpty()) return null;
         CartDto cartDto = getCart();
         Order order = OrderMapper.getINSTANCE().convertToOrder(customerDto, cartDto);

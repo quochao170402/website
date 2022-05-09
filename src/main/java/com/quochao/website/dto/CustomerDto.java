@@ -3,6 +3,7 @@ package com.quochao.website.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class CustomerDto implements Serializable {
@@ -10,5 +11,5 @@ public class CustomerDto implements Serializable {
     private String email;
     private String address;
     private String phone;
-    private Integer quantity;
+    List<CartItemsDto> cart;
 }
