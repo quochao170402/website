@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
 
-                .antMatchers("/api/v1/orders/checkouts", "/api/v1/orders/histories/**",
+                .antMatchers("/api/v1/orders/histories/**",
                         "/api/v1/accounts/**", "/api/v1/reviews/**").hasAuthority("USER")
 
                 .anyRequest().authenticated()

@@ -1,14 +1,10 @@
 package com.quochao.website.controller;
 
-import com.quochao.website.dto.CreateProductDto;
 import com.quochao.website.service.ProductService;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/v1/products")
