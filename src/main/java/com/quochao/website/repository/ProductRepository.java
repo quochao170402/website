@@ -51,8 +51,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "and (c.code like %:category%) " +
             "and (s.code like %:size%) " +
             "and (co.code like %:color%) " +
-            "and (p.price> :min) " +
-            "and (p.price< :max) " +
+            "and (p.price>= :min) " +
+            "and (p.price<= :max) " +
             "and p.state = true")
     Page<Product> filter(@Param("brand") String brandCode, @Param("category") String category,
                          @Param("size") String productSize, @Param("color") String productColor,
