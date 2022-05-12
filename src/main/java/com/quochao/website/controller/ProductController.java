@@ -22,7 +22,7 @@ public class ProductController {
             @RequestParam(name = "field", required = false, defaultValue = "name") String field,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.findAll(page, size, field, dir));
+                .body(productService.findAllByState(page, size, field, dir,true));
     }
 
     //    Return all product active in db to render in home-page or shop-page. Can not return null.
