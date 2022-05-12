@@ -11,6 +11,7 @@ import com.quochao.website.mapper.OrderMapper;
 import com.quochao.website.repository.OrderDetailRepository;
 import com.quochao.website.repository.OrderRepository;
 import com.quochao.website.repository.ProductRepository;
+import com.quochao.website.repository.UserRepository;
 import com.quochao.website.service.OrderService;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
@@ -38,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     private final OrderDetailRepository orderDetailRepository;
+
+    private final UserRepository userRepository;
 
     @Override
     public CartDto getCart() {
@@ -94,12 +97,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order checkout(CustomerDto customerDto, User user) {
+    public Order checkout(CustomerDto customerDto) {
+        Optional<User> user = userRepository.findById(customerDto.getUserId());
+        if (!user.isPresent()) throw new IllegalStateException("NOT FOUND USER");
+
         customerDto.getCart().stream().forEach(item -> addToCart(item.getCode(),item.getQuantity()));
         if (cart.isEmpty()) return null;
         CartDto cartDto = getCart();
         Order order = OrderMapper.getINSTANCE().convertToOrder(customerDto, cartDto);
-        order.setUser(user);
+        order.setUser(user.get());
         orderRepository.save(order);
         List<OrderDetail> orderDetails = cartDto.getItems().stream().map(item -> {
             OrderDetail orderDetail = OrderMapper.getINSTANCE().convertToOrderDetail(item);

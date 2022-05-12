@@ -1,6 +1,7 @@
 package com.quochao.website.controller;
 
 import com.quochao.website.dto.CustomerDto;
+import com.quochao.website.entity.Order;
 import com.quochao.website.security.MyUserDetail;
 import com.quochao.website.service.OrderService;
 import lombok.Data;
@@ -41,8 +42,8 @@ public class OrderController {
     }
 
     @PostMapping("/checkouts")
-    public ResponseEntity<?> checkout(@RequestBody CustomerDto customerDto, @AuthenticationPrincipal MyUserDetail userDetails) {
-        return ResponseEntity.ok(orderService.checkout(customerDto,userDetails.getUser()));
+    public ResponseEntity<?> checkout(@RequestBody CustomerDto customerDto) {
+        return ResponseEntity.ok(orderService.checkout(customerDto));
     }
 
     @GetMapping("/histories")

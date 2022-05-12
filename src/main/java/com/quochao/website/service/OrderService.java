@@ -18,7 +18,7 @@ public interface OrderService {
 
     CartDto removeItem(String code);
 
-    Order checkout(CustomerDto customerDto, User user);
+    Order checkout(CustomerDto customerDto);
 
     List<Order> getOrderHistory(User user);
 
