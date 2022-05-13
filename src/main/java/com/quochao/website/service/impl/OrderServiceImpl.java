@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<User> user = userRepository.findById(customerDto.getUserId());
         if (!user.isPresent()) throw new IllegalStateException("NOT FOUND USER");
 
-        customerDto.getCart().stream().forEach(item -> addToCart(item.getCode(),item.getQuantity()));
+        customerDto.getCart().stream().forEach(item -> addToCart(item.getCode(), item.getQuantity()));
         if (cart.isEmpty()) return null;
         CartDto cartDto = getCart();
         Order order = OrderMapper.getINSTANCE().convertToOrder(customerDto, cartDto);
@@ -137,7 +137,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Boolean checkOrder(Long id) {
         Optional<Order> optional = orderRepository.findById(id);
-        if (!optional.isPresent() || optional.get().getDeletedAt()!=null) throw new IllegalStateException("Not found order");
+        if (!optional.isPresent() || optional.get().getDeletedAt() != null)
+            throw new IllegalStateException("Not found order");
         Order order = optional.get();
         if (order.getState()) return true;
         order.setState(true);
@@ -151,9 +152,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = optional.get();
         if (order.getState()) throw new IllegalStateException("Processed orders cannot be deleted");
 
-        if (order.getDeletedAt()!=null){
-            if (order.getDeletedReason()==null) order.setDeletedReason(reason);
-        }else {
+        if (order.getDeletedAt() != null) {
+            if (order.getDeletedReason() == null) order.setDeletedReason(reason);
+        } else {
             order.setDeletedAt(new Timestamp(System.currentTimeMillis()));
             order.setDeletedReason(reason);
         }

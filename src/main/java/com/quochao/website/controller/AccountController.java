@@ -21,9 +21,10 @@ public class AccountController {
     private final OrderService orderService;
     private final ReviewService reviewService;
 
-    @GetMapping
-    public ResponseEntity<?> account(@AuthenticationPrincipal MyUserDetail userDetails) {
-        return ResponseEntity.ok(userDetails.getUser());
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> account(@PathVariable Long userId) {
+        User user = userService.getById(userId);
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping
@@ -31,9 +32,10 @@ public class AccountController {
         return ResponseEntity.ok(userService.updateInfo(user));
     }
 
-    @GetMapping("/histories")
-    public ResponseEntity<?> getOrders(@AuthenticationPrincipal MyUserDetail userDetails) {
-        return ResponseEntity.ok(orderService.getOrderHistory(userDetails.getUser()));
+    @GetMapping("{userId}/histories")
+    public ResponseEntity<?> getOrders(@PathVariable Long userId) {
+        User user = userService.getById(userId);
+        return ResponseEntity.ok(orderService.getOrderHistory(user));
     }
 
     @DeleteMapping("/histories/{id}")
@@ -41,9 +43,10 @@ public class AccountController {
         return ResponseEntity.ok(orderService.removeOrderHistory(userDetails.getUser(), id));
     }
 
-    @GetMapping("/reviews")
-    public ResponseEntity<?> getReviews(@AuthenticationPrincipal MyUserDetail userDetails) {
-        return ResponseEntity.ok(reviewService.getReviewsByUser(userDetails.getUser()));
+    @GetMapping("{userId}/reviews")
+    public ResponseEntity<?> getReviews(@PathVariable Long userId) {
+        User user   = userService.getById(userId);
+        return ResponseEntity.ok(reviewService.getReviewsByUser(user));
     }
 
     @DeleteMapping("/reviews/{id}")
