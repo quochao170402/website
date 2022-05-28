@@ -2,8 +2,10 @@ package com.quochao.website.controller;
 
 import com.quochao.website.dto.CustomerDto;
 import com.quochao.website.entity.Order;
+import com.quochao.website.entity.User;
 import com.quochao.website.security.MyUserDetail;
 import com.quochao.website.service.OrderService;
+import com.quochao.website.service.UserService;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<?> carts() {
@@ -47,12 +50,13 @@ public class OrderController {
     }
 
     @GetMapping("/histories")
-    public ResponseEntity<?> getOrderHistory(@AuthenticationPrincipal MyUserDetail userDetails) {
-        return ResponseEntity.ok(orderService.getOrderHistory(userDetails.getUser()));
+    public ResponseEntity<?> getOrderHistory(@RequestBody Long userId) {
+        return ResponseEntity.ok(orderService.getOrderHistory(userId));
     }
 
     @DeleteMapping("/histories/{id}")
-    public ResponseEntity<?> removeOrderHistory(@AuthenticationPrincipal MyUserDetail userDetails,@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.removeOrderHistory(userDetails.getUser(),id));
+    public ResponseEntity<?> removeOrderHistory(@RequestBody Long userId,@PathVariable Long id) {
+        User user = userService.getById(userId);
+        return ResponseEntity.ok(orderService.removeOrderHistory(user,id));
     }
 }

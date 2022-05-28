@@ -1,10 +1,12 @@
 package com.quochao.website.service.impl;
 
+import com.quochao.website.dto.ReviewDto;
 import com.quochao.website.entity.Product;
 import com.quochao.website.entity.Review;
 import com.quochao.website.entity.User;
 import com.quochao.website.repository.ProductRepository;
 import com.quochao.website.repository.ReviewRepository;
+import com.quochao.website.repository.UserRepository;
 import com.quochao.website.service.ReviewService;
 import lombok.Data;
 import org.springframework.data.domain.Page;
@@ -24,31 +26,38 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
 
+    private final UserRepository userRepository;
+
     @Override
-    public Review save(User user, String code, Review review) {
-        if (user == null)
+    public Review save(ReviewDto reviewDto) {
+        Optional<User> user = userRepository.findById(reviewDto.getUserId());
+        if (!user.isPresent())
             throw new IllegalStateException("Unauthorized");
-        Optional<Product> optional = productRepository.findProductByCode(code);
+        Optional<Product> optional = productRepository.findProductByCode(reviewDto.getCode());
         if (!optional.isPresent()) throw new IllegalStateException("Not found product");
-        review.setUser(user);
+        Review review = new Review();
+        review.setUser(user.get());
         review.setProduct(optional.get());
+        review.setContent(reviewDto.getContent());
         review.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return reviewRepository.save(review);
     }
 
     @Override
-    public Review update(User user, Review review) {
-        if (user == null) throw new IllegalStateException("Unauthorized");
-        Optional<Review> optional = reviewRepository.findById(review.getId());
+    public Review update(ReviewDto reviewDto) {
+        Optional<User> optionalUser = userRepository.findById(reviewDto.getUserId());
+        if (!optionalUser.isPresent()) throw new IllegalStateException("Unauthorized");
+        User user = optionalUser.get();
 
+        Optional<Review> optional = reviewRepository.findById(reviewDto.getReviewId());
         if (!optional.isPresent()) throw new IllegalStateException("Not found review");
         Review updated = optional.get();
 
         if (!updated.getUser().equals(user)) throw new IllegalStateException("Can't edit other people's reviews");
 
         updated.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        updated.setContent(review.getContent());
-        return review;
+        updated.setContent(reviewDto.getContent());
+        return updated;
     }
 
     @Override
@@ -80,10 +89,16 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Boolean delete(Long id) {
-        Optional<Review> optional = reviewRepository.findById(id);
+    public Boolean delete(ReviewDto reviewDto) {
+        Optional<User> optionalUser = userRepository.findById(reviewDto.getUserId());
+        if (!optionalUser.isPresent()) throw new IllegalStateException("Unauthorized");
+        User user = optionalUser.get();
+
+        Optional<Review> optional = reviewRepository.findById(reviewDto.getReviewId());
         if (!optional.isPresent()) throw new IllegalStateException("Not found review");
-        reviewRepository.deleteById(id);
+        Review updated = optional.get();
+        if (!updated.getUser().equals(user)) throw new IllegalStateException("Can't delete other people's reviews");
+        reviewRepository.deleteById(reviewDto.getReviewId());
         return true;
     }
 
@@ -93,9 +108,18 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public Boolean delete(Long id) {
+        Optional<Review> optional = reviewRepository.findById(id);
+        if (!optional.isPresent()) throw new IllegalStateException("Not found review");
+        reviewRepository.deleteById(id);
+        return true;
+    }
+
+    @Override
     public Boolean removeReview(User user, Long id) {
         Optional<Review> optional = reviewRepository.findById(id);
-        if (!optional.isPresent() || !optional.get().getUser().equals(user)) throw new IllegalStateException("Not found review");
+        if (!optional.isPresent() || !optional.get().getUser().equals(user))
+            throw new IllegalStateException("Not found review");
         reviewRepository.deleteById(id);
         return true;
     }

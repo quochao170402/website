@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.swing.plaf.IconUIResource;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -118,8 +119,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrderHistory(User user) {
-        return orderRepository.findAllByUser(user);
+    public List<Order> getOrderHistory(Long userId) {
+        Optional<User> optional = userRepository.findById(userId);
+        if (!optional.isPresent()) throw new IllegalStateException("Unauthorized");
+        return orderRepository.findAllByUser(optional.get());
     }
 
     @Override

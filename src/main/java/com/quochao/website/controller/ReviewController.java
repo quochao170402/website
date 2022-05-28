@@ -1,5 +1,6 @@
 package com.quochao.website.controller;
 
+import com.quochao.website.dto.ReviewDto;
 import com.quochao.website.entity.Review;
 import com.quochao.website.security.MyUserDetail;
 import com.quochao.website.service.ReviewService;
@@ -15,22 +16,18 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping("{code}")
-    public ResponseEntity<?> reviewProduct(@AuthenticationPrincipal MyUserDetail userDetails,
-                                           @PathVariable String code,
-                                           @RequestBody Review review) {
-        return ResponseEntity.ok(reviewService.save(userDetails.getUser(), code, review));
+    @PostMapping
+    public ResponseEntity<?> reviewProduct(@RequestBody ReviewDto reviewDto) {
+        return ResponseEntity.ok(reviewService.save(reviewDto));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateReview(@AuthenticationPrincipal MyUserDetail userDetails,
-                                          @RequestBody Review review) {
-        return ResponseEntity.ok(reviewService.update(userDetails.getUser(), review));
+    public ResponseEntity<?> updateReview(@RequestBody ReviewDto reviewDto) {
+        return ResponseEntity.ok(reviewService.update(reviewDto));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteReview(@AuthenticationPrincipal MyUserDetail userDetails,
-                                          @PathVariable Long id) {
-        return ResponseEntity.ok(reviewService.delete(userDetails.getUser(), id));
+    @DeleteMapping
+    public ResponseEntity<?> deleteReview(@RequestBody ReviewDto reviewDto) {
+        return ResponseEntity.ok(reviewService.delete(reviewDto));
     }
 }

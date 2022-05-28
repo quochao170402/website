@@ -20,7 +20,7 @@ public interface OrderService {
 
     Order checkout(CustomerDto customerDto);
 
-    List<Order> getOrderHistory(User user);
+    List<Order> getOrderHistory(Long userId);
 
     Boolean removeOrderHistory(User user, Long id);
 

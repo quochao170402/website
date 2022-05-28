@@ -1,5 +1,6 @@
 package com.quochao.website.service;
 
+import com.quochao.website.dto.ReviewDto;
 import com.quochao.website.entity.Review;
 import com.quochao.website.entity.User;
 import org.springframework.data.domain.Page;
@@ -8,9 +9,9 @@ import java.util.List;
 
 public interface ReviewService {
 
-    Review save(User user, String code, Review review);
+    Review save(ReviewDto reviewDto);
 
-    Review update(User user, Review review);
+    Review update(ReviewDto reviewDto);
 
     Boolean delete(User user, Long id);
 
@@ -18,6 +19,7 @@ public interface ReviewService {
 
     Review getById(Long id);
 
+    Boolean delete(ReviewDto reviewDto);
     Boolean delete(Long id);
 
     List<Review> getReviewsByUser(User user);

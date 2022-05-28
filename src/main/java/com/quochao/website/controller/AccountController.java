@@ -35,12 +35,13 @@ public class AccountController {
     @GetMapping("{userId}/histories")
     public ResponseEntity<?> getOrders(@PathVariable Long userId) {
         User user = userService.getById(userId);
-        return ResponseEntity.ok(orderService.getOrderHistory(user));
+        return ResponseEntity.ok(orderService.getOrderHistory(userId));
     }
 
     @DeleteMapping("/histories/{id}")
-    public ResponseEntity<?> removeOrder(@AuthenticationPrincipal MyUserDetail userDetails, @PathVariable Long id) {
-        return ResponseEntity.ok(orderService.removeOrderHistory(userDetails.getUser(), id));
+    public ResponseEntity<?> removeOrder(@RequestBody Long userId, @PathVariable Long id) {
+        User user = userService.getById(userId);
+        return ResponseEntity.ok(orderService.removeOrderHistory(user, id));
     }
 
     @GetMapping("{userId}/reviews")
@@ -50,8 +51,10 @@ public class AccountController {
     }
 
     @DeleteMapping("/reviews/{id}")
-    public ResponseEntity<?> removeReview(@AuthenticationPrincipal MyUserDetail userDetails, @PathVariable Long id) {
-        return ResponseEntity.ok(reviewService.removeReview(userDetails.getUser(), id));
+    public ResponseEntity<?> removeReview(@RequestBody Long userId,
+                                          @PathVariable Long id) {
+        User user = userService.getById(userId);
+        return ResponseEntity.ok(reviewService.removeReview(user,id));
     }
 
 }
