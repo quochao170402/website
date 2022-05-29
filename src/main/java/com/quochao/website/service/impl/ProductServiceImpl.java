@@ -129,6 +129,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Review> getReviewsByCode(String code) {
+        return productRepository.getReviewsByCode(code);
+    }
+
+    @Override
     public Page<Product> findAllByColor(String code, Integer page, Integer size, String field, String dir) {
         if (code == null || code.isEmpty())
             throw new IllegalStateException("Brand brandCode invalid");

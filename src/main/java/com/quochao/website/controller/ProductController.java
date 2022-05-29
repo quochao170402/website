@@ -125,5 +125,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.filter(brand, category, productSize, productColor, minPrice, maxPrice, page, size, field, dir));
     }
 
+    @GetMapping("/reviews/{code}")
+    public ResponseEntity<?> getReviewByCode(@PathVariable String code){
+        return ResponseEntity.ok(productService.getReviewsByCode(code));
+    }
 
 }

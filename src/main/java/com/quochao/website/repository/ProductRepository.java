@@ -2,6 +2,7 @@ package com.quochao.website.repository;
 
 import com.quochao.website.dto.ProductDto;
 import com.quochao.website.entity.Product;
+import com.quochao.website.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +23,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAllByBrandCode(String brandCode, Pageable pageable);
 
     boolean existsAllByBrandCode(String branCode);
+
+    @Query("select r from Review as r join Product  as p on Review.product = p where p.code = ?1 order by r.createdAt asc ")
+    List<Review> getReviewsByCode(String code);
 
     //    Join two table -> bad
     @Query("SELECT p from Product as p join ProductColor as pc on pc.product = p join Color as c on pc.color = c where c.code = ?1")

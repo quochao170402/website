@@ -6,6 +6,7 @@ import com.quochao.website.dto.ProductDetailDto;
 import com.quochao.website.dto.ProductImagesDto;
 import com.quochao.website.entity.Image;
 import com.quochao.website.entity.Product;
+import com.quochao.website.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,4 +54,6 @@ public interface ProductService {
     List<Product> findHotProducts();
 
     FieldsDto getAllFields();
+
+    List<Review> getReviewsByCode(String code);
 }
