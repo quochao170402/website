@@ -39,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ColorRepository colorRepository;
     private final SizeRepository sizeRepository;
+    private final ReviewRepository reviewRepository;
     private final Cloudinary cloudinary;
 
     private final ImageService imageService;
@@ -130,7 +131,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Review> getReviewsByCode(String code) {
-        return productRepository.getReviewsByCode(code);
+        Optional<Product> product = productRepository.findProductByCode(code);
+        if (product.isPresent())
+            return reviewRepository.getAllByProduct(product.get());
+        else throw new IllegalStateException("Not found product");
     }
 
     @Override

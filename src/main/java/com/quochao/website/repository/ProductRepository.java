@@ -24,9 +24,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsAllByBrandCode(String branCode);
 
-    @Query("select r from Review as r join Product  as p on Review.product = p where p.code = ?1 order by r.createdAt asc ")
-    List<Review> getReviewsByCode(String code);
-
     //    Join two table -> bad
     @Query("SELECT p from Product as p join ProductColor as pc on pc.product = p join Color as c on pc.color = c where c.code = ?1")
     Page<Product> findAllByColorCode(String color, Pageable pageable);
