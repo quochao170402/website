@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Data
@@ -114,9 +113,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findBestSellerProducts() {
+        List<Product> products = productRepository.findBestSellerProducts();
+        return products.size() >= 5 ? products.subList(0, 5) : products;
+    }
+
+    @Override
     public List<Product> findHotProducts() {
         List<Product> products = productRepository.findHotProducts();
-        return products.size() >= 5 ? products.subList(0, 5) : products;
+        return products.size() > 5 ? products.subList(0,5) : products;
     }
 
     @Override

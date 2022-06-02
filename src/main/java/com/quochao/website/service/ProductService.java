@@ -51,9 +51,11 @@ public interface ProductService {
 
     List<Product> findLatestProducts();
 
-    List<Product> findHotProducts();
+    List<Product> findBestSellerProducts();
 
     FieldsDto getAllFields();
 
     List<Review> getReviewsByCode(String code);
+
+    List<Product> findHotProducts();
 }

@@ -42,10 +42,15 @@ public class ProductController {
                 .body(productService.findLatestProducts());
     }
 
-    @GetMapping("/hot")
-    public ResponseEntity<?> getHotProducts() {
+    @GetMapping("/bestseller")
+    public ResponseEntity<?> getBestSellerProducts() {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.findHotProducts());
+                .body(productService.findBestSellerProducts());
+    }
+
+    @GetMapping("/hot")
+    public  ResponseEntity<?> getHotProducts(){
+        return ResponseEntity.ok(productService.findHotProducts());
     }
 
     @GetMapping("/fields")

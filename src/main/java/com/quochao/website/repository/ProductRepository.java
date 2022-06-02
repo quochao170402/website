@@ -1,8 +1,6 @@
 package com.quochao.website.repository;
 
-import com.quochao.website.dto.ProductDto;
 import com.quochao.website.entity.Product;
-import com.quochao.website.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -60,5 +58,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                          @Param("min") Double min, @Param("max") Double max, Pageable pageable);
 
     @Query("select p from Product as p join OrderDetail as od on od.product = p group by p.id order by count(od.quantity) desc ")
+    List<Product> findBestSellerProducts();
+
+    @Query("select p from Product as p join Review as r on r.product = p group by p.id order by  count (r.product) desc ")
     List<Product> findHotProducts();
 }
