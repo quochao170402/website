@@ -41,16 +41,16 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@ModelAttribute User user) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<?> resetPassword(@AuthenticationPrincipal MyUserDetail userDetails, @RequestBody ResetPasswordDto dto) {
-        if (userDetails == null)
+    public ResponseEntity<?> resetPassword(@RequestBody Long userId, @RequestBody ResetPasswordDto dto) {
+        User user = userService.getById(userId);
+        if (user == null)
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         else {
-            User user = userDetails.getUser();
             if (!dto.getPassword().equals(dto.getConfirmPassword()))
                 return new ResponseEntity<>("Password does not match confirm-password", HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(userService.resetPassword(user, dto.getPassword()), HttpStatus.OK);
