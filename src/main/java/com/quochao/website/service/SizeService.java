@@ -17,4 +17,6 @@ public interface SizeService {
     Size getById(Long id);
 
     Size enableSize(Long id);
+
+    Boolean remove(Long id);
 }

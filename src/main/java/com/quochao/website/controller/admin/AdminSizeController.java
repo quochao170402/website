@@ -47,4 +47,10 @@ public class AdminSizeController {
     public ResponseEntity<?> enableSize(@PathVariable Long id) {
         return ResponseEntity.ok(sizeService.enableSize(id));
     }
+
+    @DeleteMapping("remove/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id) {
+        return ResponseEntity.ok(sizeService.remove(id));
+    }
+
 }

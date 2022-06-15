@@ -48,7 +48,7 @@ public class BrandServiceImpl implements BrandService {
         if (brand.getFile()!=null){
             FileStorage fileStorage = new FileStorage(cloudinary,"brand");
             brand.setLogo(fileStorage.saveFile(brand.getFile(),brand.getCode()));
-        }
+        }else brand.setLogo("no-image");
         brand.setState(true);
         brand.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return brandRepository.save(brand);
@@ -101,5 +101,11 @@ public class BrandServiceImpl implements BrandService {
         Optional<Brand> optionalBrand = brandRepository.findById(id);
         if (optionalBrand.isPresent()) return optionalBrand.get();
         else throw new IllegalStateException("Not found brand");
+    }
+
+    @Override
+    public Boolean removeBrand(Long id) {
+        brandRepository.deleteById(id);
+        return true;
     }
 }

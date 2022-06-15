@@ -76,4 +76,10 @@ public class SizeServiceImpl implements SizeService {
         size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return size;
     }
+
+    @Override
+    public Boolean remove(Long id) {
+        sizeRepository.deleteById(id);
+        return true;
+    }
 }

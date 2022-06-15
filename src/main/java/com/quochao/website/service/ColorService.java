@@ -17,4 +17,6 @@ public interface ColorService {
     Color delete(Long id);
 
     Color enableColor(Long id);
+
+    Boolean remove(Long id);
 }

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Data
 @RestController
 @RequestMapping("admin/api/v1/categories")
@@ -52,5 +54,10 @@ public class AdminCategoryController {
     public ResponseEntity<?> enableCategory(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryService.enableCategory(id));
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> removeCategories(@PathVariable Long id){
+        return ResponseEntity.ok(categoryService.removeListCategories(id));
     }
 }

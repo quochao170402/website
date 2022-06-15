@@ -53,4 +53,9 @@ public class AdminBrandController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(brandService.enableBrand(id));
     }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> removeBrand(@PathVariable Long id){
+        return ResponseEntity.ok(brandService.removeBrand(id));
+    }
 }

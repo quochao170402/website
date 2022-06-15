@@ -44,7 +44,10 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
     }
-
+//    @PostMapping("/signup")
+//    public ResponseEntity<?> registerUser(@ModelAttribute User user) {
+//        return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
+//    }
     @PostMapping("/reset")
     public ResponseEntity<?> resetPassword(@RequestBody Long userId, @RequestBody ResetPasswordDto dto) {
         User user = userService.getById(userId);

@@ -21,4 +21,6 @@ public interface BrandService {
     Brand findById(Long id);
 
     Brand enableBrand(Long id);
+
+    Boolean removeBrand(Long id);
 }

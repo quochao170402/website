@@ -48,4 +48,10 @@ public class AdminColorController {
     public ResponseEntity<?> delete(@PathVariable Long id){
         return ResponseEntity.ok(colorService.delete(id));
     }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id){
+        return ResponseEntity.ok(colorService.remove(id));
+    }
+
 }

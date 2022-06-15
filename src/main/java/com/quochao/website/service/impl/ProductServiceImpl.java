@@ -201,7 +201,7 @@ public class ProductServiceImpl implements ProductService {
         if (createProduct.getFile() != null) {
             FileStorage fileStorage = new FileStorage(cloudinary, "product");
             product.setImage(fileStorage.saveFile(createProduct.getFile(), product.getCode()));
-        }
+        }else product.setImage("no-image");
         product.setState(true);
         product.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         productRepository.save(product);
@@ -284,9 +284,11 @@ public class ProductServiceImpl implements ProductService {
     public Image updateImages(Long id, MultipartFile imageUrl) {
         Image image = imageService.findById(id);
         if (image == null) throw new IllegalStateException("Not found image");
+        String[] subUrls = image.getImage().split("/");
+        String name = subUrls[subUrls.length-1].split("\\.")[0];
         if (imageUrl != null) {
             FileStorage fileStorage = new FileStorage(cloudinary, "product");
-            image.setImage(fileStorage.saveFile(imageUrl, image.getImage()));
+            image.setImage(fileStorage.saveFile(imageUrl, name));
         }
         return image;
     }

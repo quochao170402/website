@@ -84,4 +84,10 @@ public class CategoryServiceImpl implements CategoryService {
         if (optionalCategory.isPresent()) return optionalCategory.get();
         else throw new IllegalStateException("Not found category");
     }
+
+    @Override
+    public Boolean removeListCategories(Long id) {
+        categoryRepository.deleteById(id);
+        return true;
+    }
 }

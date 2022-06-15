@@ -67,4 +67,6 @@ public class AdminProductController {
     public ResponseEntity<?> deleteProductImages(@PathVariable Long id) {
         return ResponseEntity.ok(productService.deleteImages(id));
     }
+
+
 }

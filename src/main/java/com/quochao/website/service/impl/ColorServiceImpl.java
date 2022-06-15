@@ -76,4 +76,10 @@ public class ColorServiceImpl implements ColorService {
         color.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return color;
     }
+
+    @Override
+    public Boolean remove(Long id) {
+        colorRepository.deleteById(id);
+        return true;
+    }
 }

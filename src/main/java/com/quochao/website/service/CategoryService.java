@@ -19,4 +19,6 @@ public interface CategoryService {
     Category getById(Long id);
 
     Category enableCategory(Long id);
+
+    Boolean removeListCategories(Long id);
 }
