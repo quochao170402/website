@@ -58,4 +58,10 @@ public interface ProductService {
     List<Review> getReviewsByCode(String code);
 
     List<Product> findHotProducts();
+
+    Integer enableAll();
+
+    int removeProduct(Long id);
+
+    int changColor();
 }

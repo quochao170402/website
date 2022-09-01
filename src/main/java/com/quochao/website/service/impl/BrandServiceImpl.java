@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,7 +77,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand delete(Long id) {
         Optional<Brand> optional = brandRepository.findById(id);
-        if (!optional.isPresent()) throw new IllegalStateException("Not found brand");
+        if (optional.isEmpty()) throw new IllegalStateException("Not found brand");
         Brand brand = optional.get();
         brand.setState(false);
         brand.setDeletedAt(new Timestamp(System.currentTimeMillis()));

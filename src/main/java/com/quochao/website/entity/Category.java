@@ -6,7 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -44,16 +50,4 @@ public class Category implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Product> products;
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "name = " + name + ", " +
-                "code = " + code + ", " +
-                "state = " + state + ", " +
-                "createdAt = " + createdAt + ", " +
-                "updatedAt = " + updatedAt + ", " +
-                "deletedAt = " + deletedAt + ")";
-    }
 }

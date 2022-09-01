@@ -2,9 +2,8 @@ package com.quochao.website.service;
 
 import com.quochao.website.entity.User;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
     Page<User> findAll(Integer page, Integer size, String field, String dir);
 
     User getById(Long id);

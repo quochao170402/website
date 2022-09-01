@@ -43,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final UserRepository userRepository;
 
+
     @Override
     public CartDto getCart() {
         CartDto cartDto = new CartDto();
@@ -102,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<User> user = userRepository.findById(customerDto.getUserId());
         if (!user.isPresent()) throw new IllegalStateException("NOT FOUND USER");
 
-        customerDto.getCart().stream().forEach(item -> addToCart(item.getCode(), item.getQuantity()));
+        customerDto.getCart().forEach(item -> addToCart(item.getCode(), item.getQuantity()));
         if (cart.isEmpty()) return null;
         CartDto cartDto = getCart();
         Order order = OrderMapper.getINSTANCE().convertToOrder(customerDto, cartDto);
@@ -169,5 +170,11 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optional = orderRepository.findById(id);
         if (!optional.isPresent()) throw new IllegalStateException("Not found order");
         return optional.get();
+    }
+
+    @Override
+    public int removeAllOrderDetail() {
+        orderRepository.deleteAll();
+        return 1;
     }
 }

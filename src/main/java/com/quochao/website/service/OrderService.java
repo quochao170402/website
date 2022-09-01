@@ -31,4 +31,6 @@ public interface OrderService {
     Boolean deleteOrder(Long id, String reason);
 
     Order getOrderDetail(Long id);
+
+    int removeAllOrderDetail();
 }

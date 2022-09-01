@@ -68,5 +68,14 @@ public class AdminProductController {
         return ResponseEntity.ok(productService.deleteImages(id));
     }
 
+    @PutMapping("/enable")
+    public ResponseEntity<?> enableAllProducts(){
+        return ResponseEntity.ok(productService.enableAll());
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> removeProduct(@PathVariable Long id){
+        return ResponseEntity.ok(productService.removeProduct(id));
+    }
 
 }

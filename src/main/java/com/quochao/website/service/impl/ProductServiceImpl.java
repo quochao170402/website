@@ -310,4 +310,22 @@ public class ProductServiceImpl implements ProductService {
         }
         return imageService.delete(id);
     }
+
+    @Override
+    public Integer enableAll() {
+        return productRepository.enableAll();
+    }
+
+    @Override
+    public int removeProduct(Long id) {
+        productRepository.deleteById(id);
+        return 1;
+    }
+
+    @Override
+    public int changColor() {
+        Color color = new Color();
+        color.setId(3L);
+        return productRepository.changeColor(color);
+    }
 }

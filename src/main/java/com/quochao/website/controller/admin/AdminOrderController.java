@@ -35,4 +35,10 @@ public class AdminOrderController {
     public ResponseEntity<?> deleteOrder(@PathVariable Long id,@RequestBody String reason){
         return ResponseEntity.ok(orderService.deleteOrder(id,reason));
     }
+
+    @DeleteMapping("/removeAll")
+    public ResponseEntity<?> deleteAllOrderDetails(){
+        return ResponseEntity.ok(orderService.removeAllOrderDetail());
+    }
+
 }
