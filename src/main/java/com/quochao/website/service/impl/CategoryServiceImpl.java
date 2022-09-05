@@ -4,6 +4,7 @@ import com.quochao.website.entity.Category;
 import com.quochao.website.repository.CategoryRepository;
 import com.quochao.website.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,8 +18,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+
+    @Override
+    public List<Category> findAll() {
+        log.info("Get all categories");
+        return categoryRepository.findAll();
+    }
 
     @Override
     public Page<Category> findAll(Integer page, Integer size, String field, String dir) {
@@ -75,6 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.getState()) return category;
         category.setState(true);
         category.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        category.setDeletedAt(null);
         return category;
     }
 

@@ -9,11 +9,13 @@ public interface RoleService {
 
     Role getRoleById(Long id);
 
-    Role save(Role role);
+    Role saveRole(Role role);
 
     Role update(Role role);
 
     Role delete(Long id);
 
     Role enableRole(Long id);
+
+    Role findByName(String role_user);
 }

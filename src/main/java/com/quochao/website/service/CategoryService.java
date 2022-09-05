@@ -21,4 +21,6 @@ public interface CategoryService {
     Category enableCategory(Long id);
 
     Boolean removeListCategories(Long id);
+
+    List<Category> findAll();
 }
