@@ -23,4 +23,6 @@ public interface BrandService {
     Brand enableBrand(Long id);
 
     Boolean removeBrand(Long id);
+
+    List<Brand> findAll();
 }
